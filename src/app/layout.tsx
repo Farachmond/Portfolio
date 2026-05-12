@@ -8,8 +8,8 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "FCPRODUCTION — Motion Designer & Filmmaker",
-  description: "Portfolio van Farachmond — film, motion graphics en content creatie",
+  title: "FCPRODUCTION — Fotograaf & Videograaf",
+  description: "Portfolio van Farachmond — fotografie, video en content creatie",
   icons: {
     icon: "/favicon-fc.png",
     apple: "/favicon-fc.png",

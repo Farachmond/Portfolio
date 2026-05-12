@@ -78,7 +78,7 @@ export default function About() {
             </h3>
 
             <p className="leading-relaxed mb-4 text-lg" style={{ color: "var(--text-muted)" }}>
-              Ik ben een creatieve student en filmmaker met een passie voor storytelling, design en content creatie.
+              Ik ben een creatieve student en fotograaf/videograaf met een passie voor storytelling, design en content creatie.
             </p>
             <p className="leading-relaxed mb-4 text-sm" style={{ color: "rgba(161,161,170,0.6)" }}>
               Met FCPRODUCTION werk ik aan moderne visuals en projecten waarin sfeer, emotie en creativiteit samenkomen.

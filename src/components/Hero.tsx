@@ -95,7 +95,7 @@ export default function Hero() {
           transition={{ duration: 1, delay: 0.5 }}
           className="section-label mb-8"
         >
-          Motion Designer & Filmmaker
+          Fotograaf & Videograaf
         </motion.p>
 
         <div className="overflow-hidden mb-4">

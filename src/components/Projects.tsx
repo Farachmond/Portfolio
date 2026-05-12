@@ -14,7 +14,7 @@ const projects = [
   },
   {
     id: 2, title: "Showreel", category: "Showreel", year: "2026",
-    description: "Mijn persoonlijke showreel — een overzicht van mijn beste werk in film, motion graphics en content creatie.",
+    description: "Mijn persoonlijke showreel — een overzicht van mijn beste werk in fotografie, video en content creatie.",
     tags: ["Showreel", "Best Of"], duration: "",
     gradient: "from-neutral-900 via-zinc-800 to-stone-900",
     video: undefined, poster: undefined,
