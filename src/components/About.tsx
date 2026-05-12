@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import Image from "next/image";
 
 
 const skills = ["DaVinci Resolve", "Adobe Premiere Pro", "After Effects", "Camera", "Licht", "Geluid"];
@@ -46,17 +47,13 @@ export default function About() {
             className="relative"
           >
             <div className="relative aspect-[3/4] overflow-hidden" style={{ background: "#111" }}>
-              <img
+              <Image
                 src="/about-photo.jpg"
                 alt="Farachmond"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  objectPosition: "center top",
-                }}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                style={{ objectFit: "cover", objectPosition: "center top" }}
               />
               {/* Subtle gradient at bottom */}
               <div className="absolute bottom-0 inset-x-0 h-1/3" style={{

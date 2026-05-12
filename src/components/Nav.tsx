@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const links = [
   { href: "#projects", label: "Projecten" },
@@ -43,7 +44,7 @@ export default function Nav() {
           onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.filter = "drop-shadow(0 0 12px rgba(255,255,255,0.3))"; }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.filter = "drop-shadow(0 0 0px rgba(255,255,255,0))"; }}
         >
-          <img src="/logo.png" alt="FC Production" className="h-20 sm:h-24 md:h-40 w-auto object-contain" style={{ opacity: 1 }} />
+          <Image src="/logo.png" alt="FC Production" width={160} height={160} className="h-20 sm:h-24 md:h-40 w-auto object-contain" style={{ opacity: 1 }} />
         </motion.a>
 
         {/* Desktop links */}

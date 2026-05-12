@@ -1,5 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 const socials = [
   {
@@ -32,8 +33,16 @@ export default function Hero() {
         initial={{ scale: 1.08, opacity: 0 }}
         animate={{ scale: 1.02, opacity: 1 }}
         transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
-        style={{ backgroundImage: "url('/hero-bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}
-      />
+      >
+        <Image
+          src="/hero-bg.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          style={{ objectFit: "cover", objectPosition: "center" }}
+        />
+      </motion.div>
 
       {/* Atmospheric bokeh orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">

@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 const projects = [
   {
@@ -186,14 +187,12 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
       {/* Background: poster image or gradient */}
       <div className={`absolute inset-0 bg-gradient-to-b ${project.gradient}`} />
       {project.poster && (
-        <img
+        <Image
           src={project.poster}
           alt=""
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
           style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
             objectFit: project.posterFit ?? "cover",
             opacity: hovered ? 0 : 1,
             transition: "opacity 0.5s",
