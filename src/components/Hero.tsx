@@ -1,5 +1,5 @@
 "use client";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 
 const socials = [
@@ -24,15 +24,16 @@ const socials = [
 ];
 
 export default function Hero() {
+  const reduceMotion = useReducedMotion();
   return (
     <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
 
       {/* Background image with Ken Burns */}
       <motion.div
         className="absolute inset-0 w-full h-full"
-        initial={{ scale: 1.08, opacity: 0 }}
-        animate={{ scale: 1.02, opacity: 1 }}
-        transition={{ duration: 2.5, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ scale: reduceMotion ? 1 : 1.08, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ duration: reduceMotion ? 0.5 : 2.5, ease: [0.22, 1, 0.36, 1] }}
       >
         <Image
           src="/hero-bg.jpg"
