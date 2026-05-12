@@ -8,8 +8,12 @@ const geist = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "Farachmond — Motion Designer & Filmmaker",
-  description: "Portfolio of animation, motion graphics, and film work",
+  title: "FCPRODUCTION — Motion Designer & Filmmaker",
+  description: "Portfolio van Farachmond — film, motion graphics en content creatie",
+  icons: {
+    icon: "/favicon-fc.png",
+    apple: "/favicon-fc.png",
+  },
 };
 
 export default function RootLayout({
@@ -18,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${geist.variable} h-full`}>
+    <html lang="nl" className={`${geist.variable} h-full`}>
       <body className="h-full antialiased">
         <div className="grain-overlay" aria-hidden="true" />
         {children}

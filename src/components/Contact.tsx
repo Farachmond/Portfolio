@@ -2,199 +2,192 @@
 import { useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-const contactItems = [
-  { label: "Email", value: "hello@yourname.com", href: "mailto:hello@yourname.com" },
-  { label: "Instagram", value: "@yourhandle", href: "https://instagram.com" },
-  { label: "Vimeo", value: "vimeo.com/yourname", href: "https://vimeo.com" },
-];
-
 export default function Contact() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
+  const [email, setEmail] = useState("");
   const [form, setForm] = useState({ name: "", email: "", project: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSent(true);
+    setSending(true);
+    try {
+      const res = await fetch("https://formspree.io/f/xbljevqz", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ name: form.name, email: form.email, project: form.project, message: form.message }),
+      });
+      if (res.ok) setSent(true);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const handleQuickConnect = async () => {
+    if (!email) return;
+    await fetch("https://formspree.io/f/xbljevqz", {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ email, message: "Quick connect via email bar" }),
+    });
+    setEmail("");
   };
 
   return (
-    <section id="contact" ref={ref} className="py-32 px-6 lg:px-12 relative overflow-hidden"
-      style={{ background: "var(--bg-secondary)" }}>
-      {/* Animated glow */}
-      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[400px] rounded-full blur-[130px] pointer-events-none orb-2"
-        style={{ background: "rgba(124,58,237,0.08)" }} />
+    <section id="contact" ref={ref} className="relative py-32 px-6 lg:px-12 overflow-hidden"
+      style={{ background: "var(--bg)" }}>
 
-      {/* Top divider */}
-      <div className="absolute top-0 inset-x-0 h-px" style={{ background: "var(--glass-border)" }} />
+      {/* Bokeh */}
+      <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none bokeh-a"
+        style={{ background: "rgba(255,255,255,0.03)" }} />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
 
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24">
-          {/* Left: info */}
+      <div className="max-w-3xl mx-auto text-center">
+
+        {/* Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1 }}
+          className="mb-6"
+        >
+          <p className="section-label mb-6">Neem Contact Op</p>
+          <h2 className="text-white font-black uppercase mb-6" style={{ fontSize: "clamp(2.5rem, 9vw, 7rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
+            Contact
+          </h2>
+          <p className="text-sm leading-relaxed mx-auto max-w-md" style={{ color: "var(--text-muted)" }}>
+            Heb je een project in gedachten of wil je gewoon praten over visueel verhalen vertellen?
+            Ik hoor graag van je.
+          </p>
+        </motion.div>
+
+        {/* Quick email bar */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex gap-2 mb-16 mt-10"
+        >
+          <input
+            type="email"
+            placeholder="Vul je e-mail in"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="flex-1 bg-transparent px-5 py-4 text-sm text-white placeholder:text-white/20 focus:outline-none transition-all duration-300 glass-card"
+            onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+            onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+          />
+          <button
+            type="button"
+            onClick={handleQuickConnect}
+            className="whitespace-nowrap px-6 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 border"
+            style={{ background: "#fff", color: "#000", borderColor: "#fff" }}
+            onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; }}
+            onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; }}
+          >Connect</button>
+        </motion.div>
+
+        {/* Full form */}
+        {sent ? (
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
-            animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="py-20 flex flex-col items-center"
           >
-            <p className="text-xs tracking-[0.3em] uppercase mb-6 font-medium"
-              style={{ color: "var(--accent-light)" }}>
-              Get In Touch
-            </p>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight leading-[0.9] mb-8 text-white">
-              Let&apos;s Create
-              <br />
-              <span style={{ color: "var(--text-muted)", opacity: 0.35 }}>Something</span>
-              <br />
-              <em className="font-thin not-italic" style={{ color: "var(--text-muted)" }}>Great</em>
-            </h2>
-            <p className="leading-relaxed mb-14 max-w-sm text-base" style={{ color: "var(--text-muted)" }}>
-              Whether you have a project in mind or just want to talk about
-              visual storytelling, I&apos;d love to hear from you.
-            </p>
-
-            <div className="space-y-7">
-              {contactItems.map((item, i) => (
-                <motion.div
-                  key={item.label}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={inView ? { opacity: 1, x: 0 } : {}}
-                  transition={{ delay: 0.3 + i * 0.1 }}
-                  className="flex items-center gap-8"
-                >
-                  <span className="text-xs tracking-widest uppercase w-20 shrink-0"
-                    style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-                    {item.label}
-                  </span>
-                  <a
-                    href={item.href}
-                    className="text-sm transition-colors duration-300"
-                    style={{ color: "var(--text-muted)" }}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "var(--accent-light)")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "var(--text-muted)")}
-                  >
-                    {item.value}
-                  </a>
-                </motion.div>
-              ))}
+            <div className="w-14 h-14 glass-card flex items-center justify-center mb-6">
+              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
             </div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={inView ? { opacity: 1 } : {}}
-              transition={{ delay: 0.7 }}
-              className="mt-14 flex items-center gap-3"
-            >
-              <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#22c55e" }} />
-              <span className="text-sm" style={{ color: "var(--text-muted)", opacity: 0.6 }}>
-                Available for freelance — Q3 2025
-              </span>
-            </motion.div>
+            <h3 className="text-xl font-bold text-white mb-2">Bericht Verstuurd</h3>
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Ik kom zo snel mogelijk bij je terug.</p>
           </motion.div>
-
-          {/* Right: form */}
-          <motion.div
-            initial={{ opacity: 0, y: 50 }}
+        ) : (
+          <motion.form
+            initial={{ opacity: 0, y: 30 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.2 }}
+            transition={{ delay: 0.5 }}
+            onSubmit={handleSubmit}
+            className="space-y-4 text-left"
           >
-            {sent ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="h-full flex flex-col items-center justify-center text-center py-24"
-              >
-                <div
-                  className="w-16 h-16 flex items-center justify-center mb-7 glass-card"
-                  style={{ boxShadow: "0 0 30px var(--accent-glow)" }}
-                >
-                  <svg className="w-7 h-7" style={{ color: "var(--accent-light)" }} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                  </svg>
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-3">Message Sent</h3>
-                <p className="text-sm" style={{ color: "var(--text-muted)" }}>
-                  I&apos;ll get back to you within 24 hours.
-                </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                  <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-                  <Field label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
-                </div>
-                <Field
-                  label="Project Type"
-                  value={form.project}
-                  onChange={(v) => setForm({ ...form, project: v })}
-                  placeholder="Animation, Film, Motion Graphics..."
-                />
-                <textarea
-                  value={form.message}
-                  onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  rows={6}
-                  required
-                  placeholder="Tell me about your project..."
-                  className="w-full bg-transparent text-white/80 px-5 py-4 text-sm resize-none focus:outline-none transition-all duration-300 placeholder:text-white/20 glass-card"
-                  onFocus={(e) => {
-                    e.currentTarget.style.borderColor = "var(--accent)";
-                    e.currentTarget.style.boxShadow = "0 0 20px var(--accent-glow-soft)";
-                  }}
-                  onBlur={(e) => {
-                    e.currentTarget.style.borderColor = "var(--glass-border)";
-                    e.currentTarget.style.boxShadow = "none";
-                  }}
-                />
-                <button
-                  type="submit"
-                  className="btn-glow group w-full py-5 text-white text-xs font-bold tracking-widest uppercase flex items-center justify-center gap-3"
-                >
-                  Send Message
-                  <svg
-                    className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2}
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </button>
-              </form>
-            )}
-          </motion.div>
-        </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <Field label="Naam" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
+              <Field label="E-mail" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
+            </div>
+            <Field label="Type Project" value={form.project} onChange={(v) => setForm({ ...form, project: v })} placeholder="Animatie, Film, Motion Graphics..." />
+            <textarea
+              rows={5}
+              required
+              placeholder="Vertel me over je project..."
+              value={form.message}
+              onChange={(e) => setForm({ ...form, message: e.target.value })}
+              className="w-full bg-transparent text-white/80 px-5 py-4 text-sm resize-none focus:outline-none transition-all duration-300 placeholder:text-white/20 glass-card"
+              onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+            />
+            <button type="submit"
+              disabled={sending}
+              className="w-full flex items-center justify-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 border"
+              style={{ background: sending ? "transparent" : "#fff", color: sending ? "#fff" : "#000", borderColor: "#fff", opacity: sending ? 0.6 : 1 }}
+              onMouseEnter={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; } }}
+              onMouseLeave={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; } }}
+            >
+              {sending ? "Versturen..." : "Verstuur Bericht"}
+              {!sending && (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              )}
+            </button>
+          </motion.form>
+        )}
+
+        {/* Contact details */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 0.8 }}
+          className="mt-16 flex flex-col sm:flex-row items-center justify-center gap-8"
+        >
+          {[
+            { label: "Adres", value: "Den Haag, NL" },
+            { label: "E-mail", value: "Farachmond@gmail.com" },
+            { label: "Telefoon", value: "+31 6 49 86 64 71" },
+          ].map((item) => (
+            <div key={item.label} className="text-center">
+              <p className="section-label mb-1">{item.label}</p>
+              <p className="text-sm text-white/60">{item.value}</p>
+            </div>
+          ))}
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={inView ? { opacity: 1 } : {}}
+          transition={{ delay: 1 }}
+          className="mt-10 flex items-center justify-center gap-3"
+        >
+          <div className="w-2 h-2 rounded-full animate-pulse" style={{ background: "#22c55e" }} />
+          <span className="text-sm" style={{ color: "rgba(161,161,170,0.5)" }}>Beschikbaar voor freelance — 2026</span>
+        </motion.div>
       </div>
     </section>
   );
 }
 
-function Field({
-  label, value, onChange, type = "text", required = false, placeholder,
-}: {
-  label: string;
-  value: string;
-  onChange: (v: string) => void;
-  type?: string;
-  required?: boolean;
-  placeholder?: string;
+function Field({ label, value, onChange, type = "text", required = false, placeholder }: {
+  label: string; value: string; onChange: (v: string) => void;
+  type?: string; required?: boolean; placeholder?: string;
 }) {
   return (
     <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      required={required}
-      placeholder={placeholder ?? label}
+      type={type} value={value} onChange={(e) => onChange(e.target.value)}
+      required={required} placeholder={placeholder ?? label}
       className="w-full bg-transparent text-white/80 px-5 py-4 text-sm focus:outline-none transition-all duration-300 placeholder:text-white/20 glass-card"
-      onFocus={(e) => {
-        e.currentTarget.style.borderColor = "var(--accent)";
-        e.currentTarget.style.boxShadow = "0 0 20px var(--accent-glow-soft)";
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.borderColor = "var(--glass-border)";
-        e.currentTarget.style.boxShadow = "none";
-      }}
+      onFocus={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.3)"; }}
+      onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
     />
   );
 }

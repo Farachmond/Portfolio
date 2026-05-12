@@ -11,16 +11,15 @@
 
 :root {
   --bg: #080808;
-  --bg-secondary: #111111;
-  --bg-card: rgba(255, 255, 255, 0.03);
-  --accent: #FFFFFF;
-  --accent-light: #D4D4D4;
-  --accent-glow: rgba(255, 255, 255, 0.15);
-  --accent-glow-soft: rgba(255, 255, 255, 0.06);
-  --text: #FFFFFF;
-  --text-muted: #A1A1AA;
+  --bg-secondary: #0d0d0d;
+  --accent: #ffffff;
+  --accent-light: #d4d4d4;
+  --accent-glow: rgba(255, 255, 255, 0.12);
+  --accent-glow-soft: rgba(255, 255, 255, 0.05);
+  --text: #ffffff;
+  --text-muted: #a1a1aa;
   --border: rgba(255, 255, 255, 0.06);
-  --border-accent: rgba(255, 255, 255, 0.25);
+  --border-accent: rgba(255, 255, 255, 0.2);
   --glass: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
 }
@@ -31,10 +30,7 @@
   --font-sans: var(--font-geist-sans);
 }
 
-html {
-  scroll-behavior: smooth;
-  background: var(--bg);
-}
+html { scroll-behavior: smooth; background: var(--bg); }
 
 body {
   background: var(--bg);
@@ -43,42 +39,29 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::-webkit-scrollbar {
-  width: 2px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: var(--accent);
-  border-radius: 2px;
-}
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 2px; }
+::selection { background: #fff; color: #000; }
 
-::selection {
-  background: var(--accent);
-  color: #fff;
-}
-
-/* Grain overlay */
+/* Grain */
 @keyframes grain {
-  0%,  100% { transform: translate(0, 0); }
-  10%  { transform: translate(-2%, -3%); }
-  20%  { transform: translate(3%, 1%); }
-  30%  { transform: translate(-1%, 4%); }
-  40%  { transform: translate(2%, -2%); }
-  50%  { transform: translate(-3%, 2%); }
-  60%  { transform: translate(1%, -1%); }
-  70%  { transform: translate(-2%, 3%); }
-  80%  { transform: translate(3%, -3%); }
-  90%  { transform: translate(-1%, 1%); }
+  0%,100%{ transform:translate(0,0) }
+  10%{ transform:translate(-2%,-3%) }
+  20%{ transform:translate(3%,1%) }
+  30%{ transform:translate(-1%,4%) }
+  40%{ transform:translate(2%,-2%) }
+  50%{ transform:translate(-3%,2%) }
+  60%{ transform:translate(1%,-1%) }
+  70%{ transform:translate(-2%,3%) }
+  80%{ transform:translate(3%,-3%) }
+  90%{ transform:translate(-1%,1%) }
 }
 
 .grain-overlay {
   position: fixed;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
   pointer-events: none;
   z-index: 9998;
   opacity: 0.025;
@@ -86,41 +69,85 @@ body {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* Animated gradient orbs */
-@keyframes orb-float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(40px, -30px) scale(1.05); }
-  66%       { transform: translate(-20px, 20px) scale(0.97); }
+/* Bokeh / atmospheric orbs */
+@keyframes bokeh-float {
+  0%,100%{ transform:translate(0,0) scale(1); opacity:0.15 }
+  33%{ transform:translate(60px,-40px) scale(1.1); opacity:0.2 }
+  66%{ transform:translate(-30px,50px) scale(0.95); opacity:0.12 }
+}
+@keyframes bokeh-float-b {
+  0%,100%{ transform:translate(0,0) scale(1); opacity:0.1 }
+  33%{ transform:translate(-50px,30px) scale(1.08); opacity:0.18 }
+  66%{ transform:translate(40px,-20px) scale(0.97); opacity:0.08 }
+}
+@keyframes bokeh-float-c {
+  0%,100%{ transform:translate(0,0) scale(1); opacity:0.08 }
+  50%{ transform:translate(30px,60px) scale(1.05); opacity:0.14 }
 }
 
-@keyframes orb-float-alt {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33%       { transform: translate(-30px, 40px) scale(1.03); }
-  66%       { transform: translate(25px, -15px) scale(0.98); }
+.bokeh-a { animation: bokeh-float 14s ease-in-out infinite; }
+.bokeh-b { animation: bokeh-float-b 18s ease-in-out infinite; }
+.bokeh-c { animation: bokeh-float-c 22s ease-in-out infinite; }
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 2.5rem;
+  background: #fff;
+  color: #000;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  border: 1px solid #fff;
+}
+.btn-primary:hover {
+  background: transparent;
+  color: #fff;
 }
 
-.orb-1 { animation: orb-float 12s ease-in-out infinite; }
-.orb-2 { animation: orb-float-alt 16s ease-in-out infinite; }
-.orb-3 { animation: orb-float 20s ease-in-out infinite reverse; }
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.85rem 2.5rem;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.3s ease;
+}
+.btn-outline:hover {
+  border-color: rgba(255,255,255,0.5);
+  color: #fff;
+}
 
-/* Glassmorphism card */
+/* Glass card */
 .glass-card {
-  background: var(--glass);
-  border: 1px solid var(--glass-border);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.08);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
 }
 
-/* Glow button */
-.btn-glow {
-  position: relative;
-  overflow: hidden;
-  background: #ffffff;
-  color: #000000;
-  transition: all 0.3s ease;
+/* Section label */
+.section-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.35);
+  font-family: var(--font-geist-sans);
 }
 
-.btn-glow:hover {
-  background: #e0e0e0;
-  box-shadow: 0 0 30px rgba(255,255,255,0.2), 0 0 60px rgba(255,255,255,0.08);
+/* Cinematic divider */
+.divider {
+  width: 1px;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.3), transparent);
 }

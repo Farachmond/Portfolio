@@ -1,263 +1,319 @@
 "use client";
-import { useState, useRef } from "react";
-import { motion, AnimatePresence, useInView } from "framer-motion";
+import { useState, useRef, useEffect } from "react";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 
 const projects = [
   {
-    id: 1,
-    title: "Neon Dreams",
-    category: "Animation",
-    year: "2024",
-    description: "A surreal journey through neon-lit cityscapes exploring urban loneliness and human connection.",
-    tags: ["3D Animation", "Narrative"],
-    duration: "3:42",
-    gradient: "from-violet-950 via-purple-900 to-blue-950",
-    accent: "#7C3AED",
+    id: 1, title: "Feel Good Aftermovie", category: "Film", year: "2026",
+    description: "Aftermovie voor het Feel Good Charity event — de energie, emotie en gemeenschapssfeer van die avond vastgelegd.",
+    tags: ["Aftermovie", "Event Film"], duration: "",
+    gradient: "from-zinc-900 via-neutral-800 to-stone-900",
+    video: "/feel-good-aftermovie.mp4",
+    poster: "/feel-good-poster.png", posterFit: "cover" as const,
   },
   {
-    id: 2,
-    title: "Velocity",
-    category: "Motion Graphics",
-    year: "2024",
-    description: "High-octane motion graphics reel for an automotive brand launch campaign.",
-    tags: ["Motion Graphics", "Brand"],
-    duration: "1:30",
-    gradient: "from-purple-950 via-violet-900 to-indigo-950",
-    accent: "#9D6FFF",
+    id: 2, title: "Showreel", category: "Showreel", year: "2026",
+    description: "Mijn persoonlijke showreel — een overzicht van mijn beste werk in film, motion graphics en content creatie.",
+    tags: ["Showreel", "Best Of"], duration: "",
+    gradient: "from-neutral-900 via-zinc-800 to-stone-900",
+    video: undefined, poster: undefined,
   },
   {
-    id: 3,
-    title: "Silent Waters",
-    category: "Film",
-    year: "2023",
-    description: "A meditative short film about the intersection of nature and technology in modern life.",
-    tags: ["Cinematography", "Documentary"],
-    duration: "8:20",
-    gradient: "from-indigo-950 via-blue-900 to-violet-950",
-    accent: "#6366f1",
-  },
-  {
-    id: 4,
-    title: "Fractals",
-    category: "Animation",
-    year: "2023",
-    description: "Generative animation exploring mathematical beauty through recursive visual patterns.",
-    tags: ["Generative", "Abstract"],
-    duration: "2:15",
-    gradient: "from-violet-950 via-purple-900 to-pink-950",
-    accent: "#7C3AED",
-  },
-  {
-    id: 5,
-    title: "Emergence",
-    category: "Motion Graphics",
-    year: "2023",
-    description: "Title sequence design for an award-winning documentary series on human evolution.",
-    tags: ["Title Design", "Motion Graphics"],
-    duration: "0:45",
-    gradient: "from-blue-950 via-indigo-900 to-violet-950",
-    accent: "#9D6FFF",
-  },
-  {
-    id: 6,
-    title: "The Long Road",
-    category: "Film",
-    year: "2022",
-    description: "A road trip short capturing the raw beauty of American landscapes and open highways.",
-    tags: ["Cinematography", "Travel"],
-    duration: "12:00",
-    gradient: "from-violet-950 via-indigo-900 to-blue-950",
-    accent: "#7C3AED",
+    id: 3, title: "Intro Symposium", category: "Motion Graphics", year: "2026",
+    description: "Intro video gemaakt voor het ROC Mondriaan Symposium — een krachtige opening voor een inspirerende dag.",
+    tags: ["Motion Graphics", "Event"], duration: "",
+    gradient: "from-stone-900 via-zinc-800 to-neutral-900",
+    video: "/intro-symposium.mov", poster: "/roc-mondriaan-poster.jpg", posterFit: "contain" as const,
   },
 ];
 
-const categories = ["All", "Animation", "Motion Graphics", "Film"];
-
 export default function Projects() {
-  const [active, setActive] = useState("All");
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-
-  const filtered = active === "All" ? projects : projects.filter((p) => p.category === active);
+  const featured = projects.slice(0, 3);
+  const rest = projects.slice(3);
+  const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
-    <section id="projects" ref={ref} className="py-32 px-6 lg:px-12 relative" style={{ background: "var(--bg)" }}>
-      {/* Background glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none"
-        style={{ background: "rgba(124,58,237,0.05)" }} />
+    <section id="projects" ref={ref} className="relative py-32 px-6 lg:px-12 overflow-hidden" style={{ background: "var(--bg)" }}>
+
+      {/* Atmospheric glow */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="bokeh-a absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full blur-[140px]" style={{ background: "rgba(255,255,255,0.03)" }} />
+      </div>
 
       <div className="max-w-7xl mx-auto">
+
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-16"
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="text-center mb-20"
         >
-          <p className="text-xs tracking-[0.3em] uppercase mb-5 font-medium"
-            style={{ color: "var(--accent-light)" }}>
-            Selected Work
-          </p>
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
-            <h2 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight leading-none text-white">
-              Projects
-            </h2>
-
-            {/* Filter tabs */}
-            <div className="flex gap-2 flex-wrap">
-              {categories.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActive(cat)}
-                  className="px-4 py-2 text-xs tracking-widest uppercase transition-all duration-300"
-                  style={
-                    active === cat
-                      ? {
-                          background: "var(--accent)",
-                          color: "#fff",
-                          fontWeight: 700,
-                          boxShadow: "0 0 20px var(--accent-glow)",
-                        }
-                      : {
-                          border: "1px solid var(--glass-border)",
-                          color: "var(--text-muted)",
-                          background: "var(--glass)",
-                          backdropFilter: "blur(10px)",
-                        }
-                  }
-                  onMouseEnter={(e) => {
-                    if (active !== cat) {
-                      e.currentTarget.style.borderColor = "var(--border-accent)";
-                      e.currentTarget.style.color = "#fff";
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (active !== cat) {
-                      e.currentTarget.style.borderColor = "var(--glass-border)";
-                      e.currentTarget.style.color = "var(--text-muted)";
-                    }
-                  }}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
+          <p className="section-label mb-6">Geselecteerd Werk</p>
+          <h2 className="text-white font-black uppercase" style={{ fontSize: "clamp(3rem, 10vw, 8rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
+            Projecten
+          </h2>
         </motion.div>
 
-        {/* Grid */}
+        {/* Staggered featured cards */}
+        <div className="flex flex-col md:flex-row items-end justify-center gap-4 mb-4">
+          {featured.map((project, i) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 60 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.9, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => project.video && setActiveVideo(project.video)}
+              className={`relative overflow-hidden group flex-shrink-0 ${
+                project.video ? "cursor-pointer" : "cursor-default"
+              } ${
+                i === 1
+                  ? "w-full md:w-72 aspect-[3/4]"
+                  : "w-full md:w-56 aspect-[3/4] md:mb-10"
+              }`}
+            >
+              <ProjectCardInner project={project} featured={i === 1} />
+            </motion.div>
+          ))}
+        </div>
+
+        {/* CTA */}
         <motion.div
-          layout
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px"
-          style={{ background: "var(--glass-border)" }}
-        >
-          <AnimatePresence mode="popLayout">
-            {filtered.map((project, i) => (
-              <ProjectCard key={project.id} project={project} index={i} />
-            ))}
-          </AnimatePresence>
-        </motion.div>
-
-        <motion.p
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 0.8 }}
-          className="text-center mt-14 text-xs tracking-widest uppercase"
-          style={{ color: "var(--text-muted)", opacity: 0.4 }}
+          transition={{ delay: 1 }}
+          className="text-center mt-16"
         >
-          More work available upon request
-        </motion.p>
+          <a href="#contact"
+            className="inline-flex items-center px-8 py-4 text-xs font-semibold tracking-widest uppercase transition-all duration-300 border"
+            style={{ color: "rgba(255,255,255,0.5)", borderColor: "rgba(255,255,255,0.15)" }}
+            onMouseEnter={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.5)"; el.style.color = "#fff"; }}
+            onMouseLeave={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.15)"; el.style.color = "rgba(255,255,255,0.5)"; }}
+          >Neem Contact Op</a>
+        </motion.div>
       </div>
+
+      {/* Video lightbox */}
+      <AnimatePresence>
+        {activeVideo && (
+          <VideoModal src={activeVideo} onClose={() => setActiveVideo(null)} />
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
-function ProjectCard({ project, index }: { project: (typeof projects)[0]; index: number }) {
-  const [hovered, setHovered] = useState(false);
+function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
 
   return (
-    <motion.article
-      layout
-      initial={{ opacity: 0, scale: 0.96 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.96 }}
-      transition={{ duration: 0.45, delay: index * 0.06 }}
-      onHoverStart={() => setHovered(true)}
-      onHoverEnd={() => setHovered(false)}
-      className="group relative aspect-video overflow-hidden cursor-pointer"
-      style={{ background: "var(--bg-secondary)" }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.3 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10"
+      style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)" }}
+      onClick={onClose}
     >
-      {/* Gradient thumbnail */}
-      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-60`} />
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="relative w-full max-w-5xl"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute -top-10 right-0 flex items-center gap-2 text-xs tracking-widest uppercase transition-colors duration-200"
+          style={{ color: "rgba(255,255,255,0.4)" }}
+          onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
+          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
+        >
+          Close
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
 
-      {/* Grid lines */}
-      <div
-        className="absolute inset-0 opacity-[0.05]"
-        style={{
-          backgroundImage:
-            "linear-gradient(rgba(255,255,255,0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.2) 1px, transparent 1px)",
-          backgroundSize: "32px 32px",
-        }}
-      />
+        {/* Video player */}
+        <video
+          src={src}
+          controls
+          autoPlay
+          playsInline
+          className="w-full rounded-sm"
+          style={{ maxHeight: "80vh", background: "#000" }}
+        >
+        </video>
+      </motion.div>
+    </motion.div>
+  );
+}
 
-      {/* Purple glow on hover */}
-      <div
-        className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
-        style={{ background: `radial-gradient(ellipse at center, ${project.accent}20 0%, transparent 70%)` }}
-      />
+function ProjectCardInner({ project, featured }: { project: typeof projects[0]; featured: boolean }) {
+  const [hovered, setHovered] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-      {/* Badges */}
-      <div className="absolute top-4 left-4 text-xs font-mono" style={{ color: "var(--text-muted)", opacity: 0.5 }}>
-        {project.year}
-      </div>
-      <div className="absolute top-4 right-4 px-2.5 py-1 text-xs font-mono glass-card" style={{ color: "var(--text-muted)" }}>
-        {project.duration}
-      </div>
+  const handleMouseEnter = () => {
+    setHovered(true);
+    if (project.video && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  };
+  const handleMouseLeave = () => {
+    setHovered(false);
+    if (project.video && videoRef.current) {
+      videoRef.current.pause();
+    }
+  };
+
+  return (
+    <div className="w-full h-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+      {/* Background: poster image or gradient */}
+      <div className={`absolute inset-0 bg-gradient-to-b ${project.gradient}`} />
+      {project.poster && (
+        <img
+          src={project.poster}
+          alt=""
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: project.posterFit ?? "cover",
+            opacity: hovered ? 0 : 1,
+            transition: "opacity 0.5s",
+          }}
+        />
+      )}
+
+      {/* Video preview on hover */}
+      {project.video && (
+        <video
+          ref={videoRef}
+          src={project.video}
+          poster={project.poster}
+          muted
+          playsInline
+          loop
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
+          style={{ opacity: hovered ? 1 : 0 }}
+        />
+      )}
+
+      {!project.video && (
+        <div className="absolute inset-0 opacity-[0.04]" style={{
+          backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
+          backgroundSize: "24px 24px",
+        }} />
+      )}
+
+      {/* Default info */}
+      <motion.div
+        animate={{ opacity: hovered ? 0 : 1 }}
+        transition={{ duration: 0.3 }}
+        className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
+      >
+        <p className="section-label mb-1">{project.category}</p>
+        <h3 className="text-white font-bold text-lg">{project.title}</h3>
+        {featured && <p className="text-white/40 text-xs mt-1">{project.year}</p>}
+      </motion.div>
 
       {/* Hover overlay */}
       <motion.div
         animate={{ opacity: hovered ? 1 : 0 }}
         transition={{ duration: 0.4 }}
-        className="absolute inset-0 flex flex-col justify-end p-6"
-        style={{ background: "rgba(5,5,5,0.88)" }}
+        className="absolute inset-0 flex flex-col justify-end p-5"
+        style={{ background: project.video ? "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 60%)" : "rgba(8,8,8,0.88)" }}
       >
-        <p className="text-xs tracking-widest uppercase mb-2 font-medium" style={{ color: "var(--accent-light)" }}>
-          {project.category}
-        </p>
-        <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
-        <p className="text-sm leading-relaxed mb-4" style={{ color: "var(--text-muted)" }}>
-          {project.description}
-        </p>
-        <div className="flex gap-2 flex-wrap">
-          {project.tags.map((tag) => (
-            <span key={tag} className="text-xs px-2.5 py-1 glass-card" style={{ color: "var(--text-muted)" }}>
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Play button */}
-        <div
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 flex items-center justify-center border"
-          style={{ borderColor: "var(--accent)", boxShadow: "0 0 20px var(--accent-glow)" }}
-        >
-          <svg className="w-5 h-5 ml-1" style={{ color: "var(--accent-light)" }} fill="currentColor" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z" />
-          </svg>
-        </div>
+        {project.video ? (
+          <div className="w-full">
+            {/* Play button indicator */}
+            <div className="flex items-center gap-2 mb-3">
+              <div className="w-8 h-8 border border-white/40 rounded-full flex items-center justify-center">
+                <svg className="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z" />
+                </svg>
+              </div>
+              <span className="text-xs tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>Klik om af te spelen</span>
+            </div>
+            <p className="section-label mb-1">{project.category}</p>
+            <h3 className="text-white font-bold text-lg">{project.title}</h3>
+            <p className="text-white/40 text-xs mt-1">{project.year}</p>
+            <div className="flex gap-2 flex-wrap mt-2">
+              {project.tags.map(t => (
+                <span key={t} className="text-xs px-2 py-0.5 glass-card text-white/40">{t}</span>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-center w-full">
+            <div className="w-12 h-12 border border-white/30 flex items-center justify-center mb-4">
+              <svg className="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5v14l11-7z" />
+              </svg>
+            </div>
+            <h3 className="text-white font-bold text-lg mb-2 text-center">{project.title}</h3>
+            <p className="text-white/50 text-xs leading-relaxed mb-3 text-center">{project.description}</p>
+            <div className="flex gap-2 flex-wrap justify-center">
+              {project.tags.map(t => (
+                <span key={t} className="text-xs px-2 py-0.5 glass-card text-white/40">{t}</span>
+              ))}
+            </div>
+          </div>
+        )}
       </motion.div>
 
-      {/* Default label */}
+      {/* Duration badge */}
+      {project.duration && (
+        <div className="absolute top-4 right-4 glass-card px-2 py-1 text-xs font-mono text-white/40">
+          {project.duration}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SmallCard({ project }: { project: typeof projects[0] }) {
+  const [hovered, setHovered] = useState(false);
+  return (
+    <div
+      className="relative overflow-hidden"
+      style={{ aspectRatio: "16/9" }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+    >
+      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-80`} />
+      <motion.div
+        animate={{ opacity: hovered ? 1 : 0 }}
+        className="absolute inset-0 flex flex-col justify-end p-4"
+        style={{ background: "rgba(8,8,8,0.85)" }}
+      >
+        <p className="section-label mb-1">{project.category}</p>
+        <h3 className="text-white font-semibold text-sm">{project.title}</h3>
+      </motion.div>
       <motion.div
         animate={{ opacity: hovered ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-        className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/80 via-black/20 to-transparent"
+        className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/70 to-transparent"
       >
-        <h3 className="text-white font-semibold text-base">{project.title}</h3>
-        <p className="text-xs tracking-widest uppercase mt-0.5" style={{ color: "var(--text-muted)" }}>
-          {project.category}
-        </p>
+        <h3 className="text-white font-semibold text-sm">{project.title}</h3>
+        <p className="section-label mt-0.5">{project.year}</p>
       </motion.div>
-    </motion.article>
+    </div>
   );
 }
