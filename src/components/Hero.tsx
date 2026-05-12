@@ -147,7 +147,7 @@ export default function Hero() {
             style={{ background: "transparent", color: "rgba(255,255,255,0.6)", borderColor: "rgba(255,255,255,0.2)" }}
             onMouseEnter={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.6)"; el.style.color = "#fff"; }}
             onMouseLeave={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.2)"; el.style.color = "rgba(255,255,255,0.6)"; }}
-          >Inhuren</a>
+          >Samenwerking</a>
         </motion.div>
       </div>
 

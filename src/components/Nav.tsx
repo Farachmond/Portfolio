@@ -87,7 +87,7 @@ export default function Nav() {
             style={{ background: "rgba(8,8,8,0.97)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}
           >
             <ul className="px-6 py-10 flex flex-col gap-7">
-              {[...links, { href: "#contact", label: "Inhuren" }].map((l, i) => (
+              {[...links, { href: "#contact", label: "Samenwerking" }].map((l, i) => (
                 <motion.li key={l.label} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.07 }}>
                   <a href={l.href} onClick={() => setOpen(false)} className="text-2xl font-bold text-white/50 hover:text-white transition-colors">
                     {l.label}
