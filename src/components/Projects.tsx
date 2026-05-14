@@ -35,11 +35,13 @@ const projects = [
   },
 ];
 
+const photos: { src: string; alt: string }[] = [
+  // Voeg hier je foto's toe, bijv: { src: "/foto1.jpg", alt: "Beschrijving" }
+];
+
 export default function Projects() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const featured = projects.slice(0, 4);
-  const rest = projects.slice(4);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
@@ -65,34 +67,67 @@ export default function Projects() {
           </h2>
         </motion.div>
 
-        {/* Staggered featured cards */}
-        <div className="flex flex-col md:flex-row items-end justify-center gap-4 mb-4">
-          {featured.map((project, i) => (
+        {/* Video grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-24">
+          {projects.map((project, i) => (
             <motion.div
               key={project.id}
-              initial={{ opacity: 0, y: 60 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.9, delay: i * 0.15, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
               onClick={() => project.video && setActiveVideo(project.video)}
-              className={`relative overflow-hidden group flex-shrink-0 ${
-                project.video ? "cursor-pointer" : "cursor-default"
-              } ${
-                i === 1
-                  ? "w-full md:w-72 aspect-[3/4]"
-                  : "w-full md:w-56 aspect-[3/4] md:mb-10"
-              }`}
+              className={`relative overflow-hidden aspect-[3/4] ${project.video ? "cursor-pointer" : "cursor-default"}`}
             >
-              <ProjectCardInner project={project} featured={i === 1} />
+              <ProjectCardInner project={project} featured={false} />
             </motion.div>
           ))}
         </div>
+
+        {/* Photo section */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="mb-16"
+        >
+          <p className="section-label mb-6 text-center">Fotografie</p>
+          <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
+            Foto's
+          </h3>
+
+          {photos.length > 0 ? (
+            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
+              {photos.map((photo, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0 }}
+                  animate={inView ? { opacity: 1 } : {}}
+                  transition={{ delay: 0.5 + i * 0.05 }}
+                  className="relative overflow-hidden mb-4 break-inside-avoid"
+                >
+                  <Image src={photo.src} alt={photo.alt} width={800} height={600} className="w-full object-cover" style={{ display: "block" }} />
+                </motion.div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="aspect-square glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                </div>
+              ))}
+            </div>
+          )}
+        </motion.div>
 
         {/* CTA */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={inView ? { opacity: 1 } : {}}
           transition={{ delay: 1 }}
-          className="text-center mt-16"
+          className="text-center mt-8"
         >
           <a href="#contact"
             className="inline-flex items-center px-8 py-4 text-xs font-semibold tracking-widest uppercase transition-all duration-300 border"
