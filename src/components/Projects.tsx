@@ -67,28 +67,12 @@ export default function Projects() {
           </h2>
         </motion.div>
 
-        {/* Video grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-24">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              onClick={() => project.video && setActiveVideo(project.video)}
-              className={`relative overflow-hidden aspect-[3/4] ${project.video ? "cursor-pointer" : "cursor-default"}`}
-            >
-              <ProjectCardInner project={project} featured={false} />
-            </motion.div>
-          ))}
-        </div>
-
         {/* Photo section */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 1, delay: 0.4 }}
-          className="mb-16"
+          className="mb-24"
         >
           <p className="section-label mb-6 text-center">Fotografie</p>
           <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
@@ -121,6 +105,22 @@ export default function Projects() {
             </div>
           )}
         </motion.div>
+
+        {/* Video grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-24">
+          {projects.map((project, i) => (
+            <motion.div
+              key={project.id}
+              initial={{ opacity: 0, y: 40 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
+              onClick={() => project.video && setActiveVideo(project.video)}
+              className={`relative overflow-hidden aspect-[3/4] ${project.video ? "cursor-pointer" : "cursor-default"}`}
+            >
+              <ProjectCardInner project={project} featured={false} />
+            </motion.div>
+          ))}
+        </div>
 
         {/* CTA */}
         <motion.div
