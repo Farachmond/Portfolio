@@ -3,17 +3,6 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check, { passive: true });
-    return () => window.removeEventListener("resize", check);
-  }, []);
-  return isMobile;
-}
-
 const projects = [
   {
     id: 1, title: "Feel Good Aftermovie", category: "Film", year: "2026",
@@ -70,94 +59,134 @@ export default function Projects() {
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
-    <section id="projects" ref={ref} className="relative py-32 px-6 lg:px-12 overflow-hidden" style={{ background: "var(--bg)" }}>
-
-      {/* Atmospheric glow */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="bokeh-a absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] rounded-full blur-[140px]" style={{ background: "rgba(255,255,255,0.03)" }} />
-      </div>
+    <section id="projects" ref={ref} className="relative py-24 md:py-32 px-6 lg:px-12 overflow-hidden" style={{ background: "var(--bg)" }}>
 
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center mb-20"
-        >
+        <div className="text-center mb-16 md:mb-20">
           <p className="section-label mb-6">Geselecteerd Werk</p>
           <h2 className="text-white font-black uppercase" style={{ fontSize: "clamp(3rem, 10vw, 8rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
             Projecten
           </h2>
-        </motion.div>
+        </div>
 
-        {/* Photo marquee */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.2 }}
-          className="mb-20"
-        >
-          <p className="section-label mb-6 text-center">Fotografie</p>
-          <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
-            Foto's
-          </h3>
-          <Marquee3D speed={25}>
-            {[...(photos.length > 0 ? photos : Array(8).fill(null)), ...(photos.length > 0 ? photos : Array(8).fill(null))].map((photo, i) => (
-              <div key={i} className="flex-shrink-0 w-56 md:w-72 aspect-square overflow-hidden rounded-sm">
-                {photo ? (
-                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
-                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                    </svg>
+        {/* === MOBILE LAYOUT: static grid, no animation === */}
+        <div className="md:hidden">
+          {/* Photos grid */}
+          <div className="mb-14">
+            <p className="section-label mb-3 text-center">Fotografie</p>
+            <h3 className="text-white font-black uppercase text-center mb-8" style={{ fontSize: "clamp(2rem, 8vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
+            <div className="grid grid-cols-2 gap-2">
+              {photos.map((photo, i) => (
+                <div key={i} className="aspect-square overflow-hidden rounded-sm">
+                  <Image
+                    src={photo.src}
+                    alt={photo.alt}
+                    width={400}
+                    height={400}
+                    className="w-full h-full object-cover"
+                    loading={i < 4 ? "eager" : "lazy"}
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Videos list */}
+          <div className="mb-10">
+            <p className="section-label mb-3 text-center">Video</p>
+            <h3 className="text-white font-black uppercase text-center mb-8" style={{ fontSize: "clamp(2rem, 8vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Films</h3>
+            <div className="flex flex-col gap-3">
+              {projects.map((project) => (
+                <button
+                  key={project.id}
+                  onClick={() => project.video && setActiveVideo(project.video)}
+                  disabled={!project.video}
+                  className="relative w-full overflow-hidden rounded-sm text-left"
+                  style={{ aspectRatio: "16/9" }}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-b ${project.gradient}`} />
+                  {project.poster && (
+                    <Image src={project.poster} alt="" fill style={{ objectFit: "cover" }} sizes="100vw" />
+                  )}
+                  {(project as any).comingSoon && (
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span className="section-label px-3 py-1 border" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(8,8,8,0.7)", color: "rgba(255,255,255,0.6)" }}>Coming Soon</span>
+                    </div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute bottom-0 inset-x-0 p-4 flex items-end justify-between">
+                    <div>
+                      <p className="section-label mb-0.5">{project.category}</p>
+                      <h3 className="text-white font-bold text-base">{project.title}</h3>
+                    </div>
+                    {project.video && (
+                      <div className="w-9 h-9 border border-white/40 rounded-full flex items-center justify-center flex-shrink-0">
+                        <svg className="w-3.5 h-3.5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))}
-          </Marquee3D>
-        </motion.div>
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
 
-        {/* Video marquee */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="mb-16"
-        >
-          <p className="section-label mb-6 text-center">Video</p>
-          <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
-            Films
-          </h3>
-          <Marquee3D speed={40} reverse>
-            {[...projects, ...projects].map((project, i) => (
-              <div
-                key={i}
-                className={`flex-shrink-0 w-48 md:w-64 aspect-[3/4] relative overflow-hidden rounded-sm ${project.video ? "cursor-pointer" : "cursor-default"}`}
-                onClick={() => project.video && setActiveVideo(project.video)}
-              >
-                <ProjectCardInner project={project} featured={false} />
-              </div>
-            ))}
-          </Marquee3D>
-        </motion.div>
+        {/* === DESKTOP LAYOUT: 3D marquee === */}
+        <div className="hidden md:block">
+          {/* Photo marquee */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.2 }}
+            className="mb-20"
+          >
+            <p className="section-label mb-6 text-center">Fotografie</p>
+            <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
+            <Marquee3D speed={25}>
+              {[...photos, ...photos].map((photo, i) => (
+                <div key={i} className="flex-shrink-0 w-72 aspect-square overflow-hidden rounded-sm">
+                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </Marquee3D>
+          </motion.div>
+
+          {/* Video marquee */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 1, delay: 0.4 }}
+            className="mb-16"
+          >
+            <p className="section-label mb-6 text-center">Video</p>
+            <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Films</h3>
+            <Marquee3D speed={40} reverse>
+              {[...projects, ...projects].map((project, i) => (
+                <div
+                  key={i}
+                  className={`flex-shrink-0 w-64 aspect-[3/4] relative overflow-hidden rounded-sm ${project.video ? "cursor-pointer" : "cursor-default"}`}
+                  onClick={() => project.video && setActiveVideo(project.video)}
+                >
+                  <ProjectCardInner project={project} />
+                </div>
+              ))}
+            </Marquee3D>
+          </motion.div>
+        </div>
 
         {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : {}}
-          transition={{ delay: 1 }}
-          className="text-center mt-8"
-        >
+        <div className="text-center mt-4">
           <a href="#contact"
             className="inline-flex items-center px-8 py-4 text-xs font-semibold tracking-widest uppercase transition-all duration-300 border"
             style={{ color: "rgba(255,255,255,0.5)", borderColor: "rgba(255,255,255,0.15)" }}
             onMouseEnter={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.5)"; el.style.color = "#fff"; }}
             onMouseLeave={(e) => { const el = e.currentTarget; el.style.borderColor = "rgba(255,255,255,0.15)"; el.style.color = "rgba(255,255,255,0.5)"; }}
           >Neem Contact Op</a>
-        </motion.div>
+        </div>
       </div>
 
       {/* Video lightbox */}
@@ -176,7 +205,6 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
-  const isMobile = useIsMobile();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -198,31 +226,27 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10"
-      style={{ background: "rgba(0,0,0,0.95)", ...(isMobile ? {} : { backdropFilter: "blur(12px)" }) }}
+      style={{ background: "rgba(0,0,0,0.96)" }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
-        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ scale: 0.97, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.97, opacity: 0 }}
+        transition={{ duration: 0.2 }}
         className="relative w-full max-w-5xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close */}
         <button onClick={onClose}
-          className="absolute -top-10 right-0 flex items-center gap-2 text-xs tracking-widest uppercase transition-colors duration-200"
-          style={{ color: "rgba(255,255,255,0.4)" }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
-          onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(255,255,255,0.4)")}
+          className="absolute -top-10 right-0 flex items-center gap-2 text-xs tracking-widest uppercase"
+          style={{ color: "rgba(255,255,255,0.5)" }}
         >
-          Close
+          Sluiten
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
         </button>
 
-        {/* Video */}
         <div className="relative bg-black rounded-sm overflow-hidden" style={{ maxHeight: "80vh" }}>
           <video
             ref={videoRef} src={src} autoPlay playsInline
@@ -233,29 +257,20 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
             className="w-full"
             style={{ maxHeight: "calc(80vh - 56px)", display: "block" }}
           />
-
-          {/* Custom controls */}
-          <div className="flex items-center gap-3 px-4 py-3" style={{ background: "rgba(0,0,0,0.85)" }}>
-            {/* Play/pause */}
+          <div className="flex items-center gap-3 px-4 py-3" style={{ background: "rgba(0,0,0,0.9)" }}>
             <button onClick={togglePlay} className="text-white flex-shrink-0">
               {playing
                 ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                 : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
               }
             </button>
-
-            {/* Time */}
             <span className="text-xs font-mono flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }}>
               {fmt(duration * progress / 100)} / {fmt(duration)}
             </span>
-
-            {/* Progress bar */}
             <input type="range" min={0} max={100} value={progress}
               onChange={(e) => { const v = videoRef.current; if (v) { v.currentTime = v.duration * Number(e.target.value) / 100; setProgress(Number(e.target.value)); } }}
               className="flex-1 h-1 cursor-pointer accent-white"
             />
-
-            {/* Mute */}
             <button onClick={() => { const v = videoRef.current; if (v) { v.muted = !v.muted; setMuted(!muted); } }} className="text-white flex-shrink-0">
               {muted
                 ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l2 2L21 18.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
@@ -269,10 +284,9 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
   );
 }
 
-function ProjectCardInner({ project, featured }: { project: typeof projects[0]; featured: boolean }) {
+function ProjectCardInner({ project }: { project: typeof projects[0] }) {
   const [hovered, setHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const isMobile = useIsMobile();
 
   const handleMouseEnter = () => {
     setHovered(true);
@@ -290,168 +304,92 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
 
   return (
     <div className="w-full h-full" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      {/* Background: poster image or gradient */}
       <div className={`absolute inset-0 bg-gradient-to-b ${project.gradient}`} />
       {project.poster && (
         <Image
           src={project.poster}
           alt=""
           fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          style={{
-            objectFit: project.posterFit ?? "cover",
-            opacity: hovered ? 0 : 1,
-            transition: "opacity 0.5s",
-          }}
+          sizes="33vw"
+          style={{ objectFit: project.posterFit ?? "cover", opacity: hovered ? 0 : 1, transition: "opacity 0.5s" }}
         />
       )}
-
-      {/* Video preview on hover — desktop only */}
-      {project.video && !isMobile && (
+      {project.video && (
         <video
           ref={videoRef}
           src={project.video}
-          poster={project.poster}
-          muted
-          playsInline
-          loop
+          muted playsInline loop
           preload="none"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: hovered ? 1 : 0 }}
         />
       )}
-
       {!project.video && (
         <div className="absolute inset-0 opacity-[0.04]" style={{
           backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }} />
       )}
-
       {(project as any).comingSoon && (
         <div className="absolute top-4 left-1/2 -translate-x-1/2 px-3 py-1 border z-10" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(8,8,8,0.6)" }}>
           <span className="section-label" style={{ color: "rgba(255,255,255,0.5)" }}>Coming Soon</span>
         </div>
       )}
-
-      {/* Default info */}
-      <motion.div
-        animate={{ opacity: hovered ? 0 : 1 }}
-        transition={{ duration: 0.3 }}
-        className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
-      >
+      <div className="absolute bottom-0 inset-x-0 p-5 bg-gradient-to-t from-black/90 via-black/40 to-transparent"
+        style={{ opacity: hovered ? 0 : 1, transition: "opacity 0.3s" }}>
         <p className="section-label mb-1">{project.category}</p>
         <h3 className="text-white font-bold text-lg">{project.title}</h3>
-        {featured && <p className="text-white/40 text-xs mt-1">{project.year}</p>}
-      </motion.div>
-
-      {/* Hover overlay */}
-      <motion.div
-        animate={{ opacity: hovered ? 1 : 0 }}
-        transition={{ duration: 0.4 }}
-        className="absolute inset-0 flex flex-col justify-end p-5"
-        style={{ background: project.video ? "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 60%)" : "rgba(8,8,8,0.88)" }}
-      >
+      </div>
+      <div className="absolute inset-0 flex flex-col justify-end p-5"
+        style={{
+          opacity: hovered ? 1 : 0, transition: "opacity 0.4s",
+          background: project.video ? "linear-gradient(to top, rgba(8,8,8,0.85) 0%, transparent 60%)" : "rgba(8,8,8,0.88)"
+        }}>
         {project.video ? (
           <div className="w-full">
-            {/* Play button indicator */}
             <div className="flex items-center gap-2 mb-3">
               <div className="w-8 h-8 border border-white/40 rounded-full flex items-center justify-center">
-                <svg className="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M8 5v14l11-7z" />
-                </svg>
+                <svg className="w-3 h-3 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
               </div>
               <span className="text-xs tracking-widest uppercase" style={{ color: "rgba(255,255,255,0.5)" }}>Klik om af te spelen</span>
             </div>
             <p className="section-label mb-1">{project.category}</p>
             <h3 className="text-white font-bold text-lg">{project.title}</h3>
-            <p className="text-white/40 text-xs mt-1">{project.year}</p>
-            <div className="flex gap-2 flex-wrap mt-2">
-              {project.tags.map(t => (
-                <span key={t} className="text-xs px-2 py-0.5 glass-card text-white/40">{t}</span>
-              ))}
-            </div>
           </div>
         ) : (
           <div className="flex flex-col items-center w-full">
             <div className="w-12 h-12 border border-white/30 flex items-center justify-center mb-4">
-              <svg className="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M8 5v14l11-7z" />
-              </svg>
+              <svg className="w-4 h-4 text-white ml-1" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" /></svg>
             </div>
             <h3 className="text-white font-bold text-lg mb-2 text-center">{project.title}</h3>
-            <p className="text-white/50 text-xs leading-relaxed mb-3 text-center">{project.description}</p>
-            <div className="flex gap-2 flex-wrap justify-center">
-              {project.tags.map(t => (
-                <span key={t} className="text-xs px-2 py-0.5 glass-card text-white/40">{t}</span>
-              ))}
-            </div>
           </div>
         )}
-      </motion.div>
-
-      {/* Duration badge */}
-      {project.duration && (
-        <div className="absolute top-4 right-4 glass-card px-2 py-1 text-xs font-mono text-white/40">
-          {project.duration}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function Marquee3D({ children, speed = 30, reverse = false }: { children: React.ReactNode; speed?: number; reverse?: boolean }) {
-  const isMobile = useIsMobile();
-  return (
-    <div style={{
-      ...(isMobile ? {} : { perspective: "800px" }),
-      overflow: "hidden",
-      maskImage: isMobile ? undefined : "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-      WebkitMaskImage: isMobile ? undefined : "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-    }}>
-      <div style={isMobile ? {} : { transform: "rotateX(8deg)", transformOrigin: "center center" }}>
-        <div
-          className="flex gap-4 w-max py-4"
-          style={{
-            animation: `marquee ${speed}s linear infinite ${reverse ? "reverse" : ""}`,
-            willChange: "transform",
-            backfaceVisibility: "hidden",
-          }}
-          onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.animationPlayState = "paused"; }}
-          onMouseLeave={(e) => { if (!isMobile) e.currentTarget.style.animationPlayState = "running"; }}
-        >
-          {children}
-        </div>
       </div>
     </div>
   );
 }
 
-function SmallCard({ project }: { project: typeof projects[0] }) {
-  const [hovered, setHovered] = useState(false);
+function Marquee3D({ children, speed = 30, reverse = false }: { children: React.ReactNode; speed?: number; reverse?: boolean }) {
   return (
-    <div
-      className="relative overflow-hidden"
-      style={{ aspectRatio: "16/9" }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-    >
-      <div className={`absolute inset-0 bg-gradient-to-br ${project.gradient} opacity-80`} />
-      <motion.div
-        animate={{ opacity: hovered ? 1 : 0 }}
-        className="absolute inset-0 flex flex-col justify-end p-4"
-        style={{ background: "rgba(8,8,8,0.85)" }}
-      >
-        <p className="section-label mb-1">{project.category}</p>
-        <h3 className="text-white font-semibold text-sm">{project.title}</h3>
-      </motion.div>
-      <motion.div
-        animate={{ opacity: hovered ? 0 : 1 }}
-        className="absolute bottom-0 inset-x-0 p-4 bg-gradient-to-t from-black/70 to-transparent"
-      >
-        <h3 className="text-white font-semibold text-sm">{project.title}</h3>
-        <p className="section-label mt-0.5">{project.year}</p>
-      </motion.div>
+    <div style={{
+      perspective: "800px",
+      overflow: "hidden",
+      maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+    }}>
+      <div style={{ transform: "rotateX(8deg)", transformOrigin: "center center" }}>
+        <div
+          className="flex gap-4 w-max py-4"
+          style={{
+            animation: `marquee ${speed}s linear infinite ${reverse ? "reverse" : ""}`,
+            willChange: "transform",
+          }}
+          onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
+          onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
+        >
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
