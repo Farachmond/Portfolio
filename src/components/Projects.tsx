@@ -17,7 +17,7 @@ const projects = [
     description: "Mijn persoonlijke showreel — een overzicht van mijn beste werk in fotografie, video en content creatie.",
     tags: ["Showreel", "Best Of"], duration: "",
     gradient: "from-neutral-900 via-zinc-800 to-stone-900",
-    video: undefined, poster: undefined,
+    video: undefined, poster: undefined, comingSoon: true,
   },
   {
     id: 3, title: "Intro Symposium", category: "Motion Graphics", year: "2026",
@@ -313,6 +313,12 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
           backgroundImage: "linear-gradient(rgba(255,255,255,0.3) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.3) 1px, transparent 1px)",
           backgroundSize: "24px 24px",
         }} />
+      )}
+
+      {(project as any).comingSoon && (
+        <div className="absolute top-4 left-1/2 -translate-x-1/2 px-3 py-1 border z-10" style={{ borderColor: "rgba(255,255,255,0.2)", background: "rgba(8,8,8,0.6)" }}>
+          <span className="section-label" style={{ color: "rgba(255,255,255,0.5)" }}>Coming Soon</span>
+        </div>
       )}
 
       {/* Default info */}
