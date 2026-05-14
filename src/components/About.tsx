@@ -92,19 +92,17 @@ export default function About() {
             {/* Skills */}
             <div>
               <p className="section-label mb-4">Programma's & Software</p>
-              <div className="flex gap-2 flex-wrap">
+              <div className="flex flex-col gap-2">
                 {skills.map((skill, i) => (
-                  <motion.span key={skill}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={inView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ delay: 0.6 + i * 0.05 }}
-                    className="px-3 py-1.5 text-xs glass-card cursor-default transition-all duration-300"
-                    style={{ color: "var(--text-muted)" }}
-                    onMouseEnter={(e) => { e.currentTarget.style.color = "#fff"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.25)"; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.color = "var(--text-muted)"; e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
+                  <motion.div key={skill}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={inView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ delay: 0.6 + i * 0.06 }}
+                    className="flex items-center gap-3"
                   >
-                    {skill}
-                  </motion.span>
+                    <div className="w-4 h-px flex-shrink-0" style={{ background: "rgba(255,255,255,0.2)" }} />
+                    <span className="text-sm" style={{ color: "var(--text-muted)" }}>{skill}</span>
+                  </motion.div>
                 ))}
               </div>
             </div>
