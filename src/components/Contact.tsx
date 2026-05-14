@@ -15,8 +15,10 @@ export default function Contact() {
     const body = encodeURIComponent(
       `Naam: ${form.name}\nE-mail: ${form.email}\nProject: ${form.project}\n\n${form.message}`
     );
-    window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
     setSent(true);
+    setTimeout(() => {
+      window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
+    }, 300);
   };
 
   const handleQuickConnect = () => {
@@ -88,13 +90,16 @@ export default function Contact() {
             animate={{ opacity: 1, scale: 1 }}
             className="py-20 flex flex-col items-center"
           >
-            <div className="w-14 h-14 glass-card flex items-center justify-center mb-6">
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <div className="w-16 h-16 border border-white/20 flex items-center justify-center mb-6">
+              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
               </svg>
             </div>
-            <h3 className="text-xl font-bold text-white mb-2">Bericht Verstuurd</h3>
-            <p className="text-sm" style={{ color: "var(--text-muted)" }}>Ik kom zo snel mogelijk bij je terug.</p>
+            <h3 className="text-2xl font-black uppercase text-white mb-3" style={{ letterSpacing: "-0.02em" }}>Bericht Verstuurd</h3>
+            <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
+              Je mail-app is geopend met je bericht klaar.<br />Druk op verzenden om het te sturen naar Farachmond.
+            </p>
+            <p className="section-label">farachmond@gmail.com</p>
           </motion.div>
         ) : (
           <motion.form
