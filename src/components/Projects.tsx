@@ -85,28 +85,21 @@ export default function Projects() {
           <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
             Foto's
           </h3>
-          <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
-            <div
-              className="flex gap-4 w-max"
-              style={{ animation: "marquee 25s linear infinite" }}
-              onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
-              onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
-            >
-              {[...(photos.length > 0 ? photos : Array(8).fill(null)), ...(photos.length > 0 ? photos : Array(8).fill(null))].map((photo, i) => (
-                <div key={i} className="flex-shrink-0 w-64 aspect-square overflow-hidden" style={{ cursor: photo ? "pointer" : "default" }}>
-                  {photo ? (
-                    <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
-                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
+          <Marquee3D speed={25}>
+            {[...(photos.length > 0 ? photos : Array(8).fill(null)), ...(photos.length > 0 ? photos : Array(8).fill(null))].map((photo, i) => (
+              <div key={i} className="flex-shrink-0 w-56 md:w-72 aspect-square overflow-hidden rounded-sm">
+                {photo ? (
+                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
+                    <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </Marquee3D>
         </motion.div>
 
         {/* Video marquee */}
@@ -120,24 +113,17 @@ export default function Projects() {
           <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
             Films
           </h3>
-          <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
-            <div
-              className="flex gap-4 w-max"
-              style={{ animation: "marquee 40s linear infinite" }}
-              onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
-              onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
-            >
-              {[...projects, ...projects].map((project, i) => (
-                <div
-                  key={i}
-                  className={`flex-shrink-0 w-64 aspect-[3/4] relative overflow-hidden ${project.video ? "cursor-pointer" : "cursor-default"}`}
-                  onClick={() => project.video && setActiveVideo(project.video)}
-                >
-                  <ProjectCardInner project={project} featured={false} />
-                </div>
-              ))}
-            </div>
-          </div>
+          <Marquee3D speed={40} reverse>
+            {[...projects, ...projects].map((project, i) => (
+              <div
+                key={i}
+                className={`flex-shrink-0 w-48 md:w-64 aspect-[3/4] relative overflow-hidden rounded-sm ${project.video ? "cursor-pointer" : "cursor-default"}`}
+                onClick={() => project.video && setActiveVideo(project.video)}
+              >
+                <ProjectCardInner project={project} featured={false} />
+              </div>
+            ))}
+          </Marquee3D>
         </motion.div>
 
         {/* CTA */}
@@ -384,6 +370,28 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
           {project.duration}
         </div>
       )}
+    </div>
+  );
+}
+
+function Marquee3D({ children, speed = 30, reverse = false }: { children: React.ReactNode; speed?: number; reverse?: boolean }) {
+  return (
+    <div style={{
+      perspective: "800px",
+      overflow: "hidden",
+      maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+    }}>
+      <div style={{ transform: "rotateX(8deg)", transformOrigin: "center center" }}>
+        <div
+          className="flex gap-4 w-max py-4"
+          style={{ animation: `marquee ${speed}s linear infinite ${reverse ? "reverse" : ""}` }}
+          onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
+          onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
+        >
+          {children}
+        </div>
+      </div>
     </div>
   );
 }
