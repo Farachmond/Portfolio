@@ -67,60 +67,71 @@ export default function Projects() {
           </h2>
         </motion.div>
 
-        {/* Photo section */}
+        {/* Photo marquee */}
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 1, delay: 0.4 }}
-          className="mb-24"
+          transition={{ duration: 1, delay: 0.2 }}
+          className="mb-20"
         >
           <p className="section-label mb-6 text-center">Fotografie</p>
           <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
             Foto's
           </h3>
-
-          {photos.length > 0 ? (
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4">
-              {photos.map((photo, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0 }}
-                  animate={inView ? { opacity: 1 } : {}}
-                  transition={{ delay: 0.5 + i * 0.05 }}
-                  className="relative overflow-hidden mb-4 break-inside-avoid"
-                >
-                  <Image src={photo.src} alt={photo.alt} width={800} height={600} className="w-full object-cover" style={{ display: "block" }} />
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="aspect-square glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-                  </svg>
+          <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
+            <div
+              className="flex gap-4 w-max"
+              style={{ animation: "marquee 25s linear infinite" }}
+              onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
+              onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
+            >
+              {[...(photos.length > 0 ? photos : Array(8).fill(null)), ...(photos.length > 0 ? photos : Array(8).fill(null))].map((photo, i) => (
+                <div key={i} className="flex-shrink-0 w-64 aspect-square overflow-hidden" style={{ cursor: photo ? "pointer" : "default" }}>
+                  {photo ? (
+                    <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full glass-card flex items-center justify-center" style={{ borderStyle: "dashed" }}>
+                      <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1} style={{ color: "rgba(255,255,255,0.15)" }}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>
-          )}
+          </div>
         </motion.div>
 
-        {/* Video grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-24">
-          {projects.map((project, i) => (
-            <motion.div
-              key={project.id}
-              initial={{ opacity: 0, y: 40 }}
-              animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.8, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] }}
-              onClick={() => project.video && setActiveVideo(project.video)}
-              className={`relative overflow-hidden aspect-[3/4] ${project.video ? "cursor-pointer" : "cursor-default"}`}
+        {/* Video marquee */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 1, delay: 0.4 }}
+          className="mb-16"
+        >
+          <p className="section-label mb-6 text-center">Video</p>
+          <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>
+            Films
+          </h3>
+          <div className="overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
+            <div
+              className="flex gap-4 w-max"
+              style={{ animation: "marquee 40s linear infinite" }}
+              onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
+              onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
             >
-              <ProjectCardInner project={project} featured={false} />
-            </motion.div>
-          ))}
-        </div>
+              {[...projects, ...projects].map((project, i) => (
+                <div
+                  key={i}
+                  className={`flex-shrink-0 w-64 aspect-[3/4] relative overflow-hidden ${project.video ? "cursor-pointer" : "cursor-default"}`}
+                  onClick={() => project.video && setActiveVideo(project.video)}
+                >
+                  <ProjectCardInner project={project} featured={false} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </motion.div>
 
         {/* CTA */}
         <motion.div
