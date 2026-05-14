@@ -8,24 +8,41 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [form, setForm] = useState({ name: "", email: "", project: "", message: "" });
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const subject = encodeURIComponent(`Samenwerking: ${form.project || "Nieuw project"}`);
-    const body = encodeURIComponent(
-      `Naam: ${form.name}\nE-mail: ${form.email}\nProject: ${form.project}\n\n${form.message}`
-    );
-    setSent(true);
-    setTimeout(() => {
-      window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
-    }, 300);
+    setSending(true);
+    try {
+      await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          access_key: "2c0ecfde-f9ee-4e69-9309-e5d8adf1e2ea",
+          name: form.name,
+          email: form.email,
+          subject: `Samenwerking: ${form.project || "Nieuw project"}`,
+          message: `Project: ${form.project}\n\n${form.message}`,
+        }),
+      });
+      setSent(true);
+    } finally {
+      setSending(false);
+    }
   };
 
-  const handleQuickConnect = () => {
+  const handleQuickConnect = async () => {
     if (!email) return;
-    const subject = encodeURIComponent("Contact via FCProduction");
-    const body = encodeURIComponent(`E-mail: ${email}`);
-    window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
+    await fetch("https://api.web3forms.com/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        access_key: "2c0ecfde-f9ee-4e69-9309-e5d8adf1e2ea",
+        email,
+        subject: "Quick connect via FCProduction",
+        message: `E-mail: ${email}`,
+      }),
+    });
     setEmail("");
   };
 
@@ -96,10 +113,9 @@ export default function Contact() {
               </svg>
             </div>
             <h3 className="text-2xl font-black uppercase text-white mb-3" style={{ letterSpacing: "-0.02em" }}>Bericht Verstuurd</h3>
-            <p className="text-sm mb-6" style={{ color: "var(--text-muted)" }}>
-              Je mail-app is geopend met je bericht klaar.<br />Druk op verzenden om het te sturen naar Farachmond.
+            <p className="text-sm" style={{ color: "var(--text-muted)" }}>
+              Je bericht is direct verstuurd. Ik kom zo snel mogelijk bij je terug!
             </p>
-            <p className="section-label">farachmond@gmail.com</p>
           </motion.div>
         ) : (
           <motion.form
@@ -125,15 +141,18 @@ export default function Contact() {
               onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
             />
             <button type="submit"
+              disabled={sending}
               className="w-full flex items-center justify-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 border"
-              style={{ background: "#fff", color: "#000", borderColor: "#fff" }}
-              onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; }}
-              onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; }}
+              style={{ background: sending ? "transparent" : "#fff", color: sending ? "rgba(255,255,255,0.5)" : "#000", borderColor: "#fff", cursor: sending ? "not-allowed" : "pointer" }}
+              onMouseEnter={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; } }}
+              onMouseLeave={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; } }}
             >
-              Verstuur Bericht
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+              {sending ? "Versturen..." : "Verstuur Bericht"}
+              {!sending && (
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              )}
             </button>
           </motion.form>
         )}
