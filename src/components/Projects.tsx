@@ -26,6 +26,13 @@ const projects = [
     gradient: "from-stone-900 via-zinc-800 to-neutral-900",
     video: "/intro-symposium.mov", poster: "/roc-mondriaan-poster.jpg", posterFit: "contain" as const,
   },
+  {
+    id: 4, title: "The Breakfast Club Trailer", category: "Film", year: "2026",
+    description: "Zelfgemaakte trailer van The Breakfast Club — een creatieve hervertelling van een iconische film.",
+    tags: ["Trailer", "Film"], duration: "",
+    gradient: "from-zinc-900 via-stone-800 to-neutral-900",
+    video: "/breakfast-club-trailer.mp4", poster: undefined, posterFit: "cover" as const,
+  },
 ];
 
 export default function Projects() {
