@@ -3,6 +3,17 @@ import { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
 const projects = [
   {
     id: 1, title: "Feel Good Aftermovie", category: "Film", year: "2026",
@@ -165,6 +176,7 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
   const [progress, setProgress] = useState(0);
   const [duration, setDuration] = useState(0);
   const [muted, setMuted] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -188,7 +200,7 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
     <motion.div
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10"
-      style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)" }}
+      style={{ background: "rgba(0,0,0,0.95)", ...(isMobile ? {} : { backdropFilter: "blur(12px)" }) }}
       onClick={onClose}
     >
       <motion.div
@@ -260,6 +272,7 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
 function ProjectCardInner({ project, featured }: { project: typeof projects[0]; featured: boolean }) {
   const [hovered, setHovered] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const isMobile = useIsMobile();
 
   const handleMouseEnter = () => {
     setHovered(true);
@@ -293,8 +306,8 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
         />
       )}
 
-      {/* Video preview on hover */}
-      {project.video && (
+      {/* Video preview on hover — desktop only */}
+      {project.video && !isMobile && (
         <video
           ref={videoRef}
           src={project.video}
@@ -302,7 +315,7 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
           muted
           playsInline
           loop
-          preload="metadata"
+          preload="none"
           className="absolute inset-0 w-full h-full object-cover transition-opacity duration-500"
           style={{ opacity: hovered ? 1 : 0 }}
         />
@@ -388,19 +401,24 @@ function ProjectCardInner({ project, featured }: { project: typeof projects[0]; 
 }
 
 function Marquee3D({ children, speed = 30, reverse = false }: { children: React.ReactNode; speed?: number; reverse?: boolean }) {
+  const isMobile = useIsMobile();
   return (
     <div style={{
-      perspective: "800px",
+      ...(isMobile ? {} : { perspective: "800px" }),
       overflow: "hidden",
-      maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-      WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      maskImage: isMobile ? undefined : "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      WebkitMaskImage: isMobile ? undefined : "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
     }}>
-      <div style={{ transform: "rotateX(8deg)", transformOrigin: "center center" }}>
+      <div style={isMobile ? {} : { transform: "rotateX(8deg)", transformOrigin: "center center" }}>
         <div
           className="flex gap-4 w-max py-4"
-          style={{ animation: `marquee ${speed}s linear infinite ${reverse ? "reverse" : ""}` }}
-          onMouseEnter={(e) => (e.currentTarget.style.animationPlayState = "paused")}
-          onMouseLeave={(e) => (e.currentTarget.style.animationPlayState = "running")}
+          style={{
+            animation: `marquee ${speed}s linear infinite ${reverse ? "reverse" : ""}`,
+            willChange: "transform",
+            backfaceVisibility: "hidden",
+          }}
+          onMouseEnter={(e) => { if (!isMobile) e.currentTarget.style.animationPlayState = "paused"; }}
+          onMouseLeave={(e) => { if (!isMobile) e.currentTarget.style.animationPlayState = "running"; }}
         >
           {children}
         </div>

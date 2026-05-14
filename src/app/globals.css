@@ -92,14 +92,15 @@ body {
 .bokeh-c { animation: bokeh-float-c 22s ease-in-out infinite; will-change: transform; }
 
 @media (max-width: 768px) {
-  .bokeh-a, .bokeh-b, .bokeh-c { animation: none; }
-  .grain-overlay { animation: none; opacity: 0.015; }
+  .bokeh-a, .bokeh-b, .bokeh-c { animation: none; opacity: 0; }
+  .grain-overlay { display: none; }
   .glass-card { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(255,255,255,0.06); }
+  * { -webkit-tap-highlight-color: transparent; }
 }
 
 @keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
 }
 
 /* Buttons */

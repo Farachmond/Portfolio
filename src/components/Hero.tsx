@@ -1,6 +1,6 @@
 "use client";
+import React from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 
 const socials = [
   {
@@ -23,17 +23,29 @@ const socials = [
   },
 ];
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState(false);
+  React.useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check, { passive: true });
+    return () => window.removeEventListener("resize", check);
+  }, []);
+  return isMobile;
+}
+
 export default function Hero() {
   const reduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
   return (
     <section id="home" className="relative h-screen w-full overflow-hidden flex items-center justify-center">
 
       {/* Background image with Ken Burns */}
       <motion.div
         className="absolute inset-0 w-full h-full"
-        initial={{ scale: reduceMotion ? 1 : 1.08, opacity: 0 }}
+        initial={{ scale: (reduceMotion || isMobile) ? 1 : 1.08, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: reduceMotion ? 0.5 : 2.5, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: (reduceMotion || isMobile) ? 0.4 : 2.5, ease: [0.22, 1, 0.36, 1] }}
       >
         <video
           autoPlay
@@ -47,7 +59,7 @@ export default function Hero() {
         </video>
       </motion.div>
 
-      {/* Atmospheric bokeh orbs */}
+      {/* Atmospheric bokeh orbs — desktop only (CSS hides on mobile) */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div className="bokeh-a absolute top-1/4 left-1/3 w-96 h-96 rounded-full blur-[100px]" style={{ background: "rgba(255,255,255,0.06)" }} />
         <div className="bokeh-b absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full blur-[120px]" style={{ background: "rgba(200,200,220,0.05)" }} />
@@ -92,9 +104,9 @@ export default function Hero() {
       {/* Center content */}
       <div className="relative z-10 text-center px-6 max-w-5xl mx-auto flex flex-col items-center">
         <motion.p
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: isMobile ? 10 : 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
+          transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.2 : 0.5 }}
           className="section-label mb-8"
         >
           Fotograaf & Videograaf
@@ -102,9 +114,9 @@ export default function Hero() {
 
         <div className="overflow-hidden mb-4">
           <motion.h1
-            initial={{ y: 120, opacity: 0 }}
+            initial={{ y: isMobile ? 40 : 120, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 1.2, delay: 0.7, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: isMobile ? 0.6 : 1.2, delay: isMobile ? 0.3 : 0.7, ease: [0.22, 1, 0.36, 1] }}
             className="text-white uppercase font-black"
             style={{
               fontFamily: "Arome, sans-serif",
@@ -120,7 +132,7 @@ export default function Hero() {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.1 }}
+          transition={{ duration: isMobile ? 0.5 : 1, delay: isMobile ? 0.5 : 1.1 }}
           className="mb-12 tracking-[0.15em] font-light"
           style={{ color: "var(--text-muted)", fontSize: "clamp(0.9rem, 2vw, 1.1rem)" }}
         >
@@ -130,7 +142,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 1.4 }}
+          transition={{ duration: isMobile ? 0.5 : 0.8, delay: isMobile ? 0.6 : 1.4 }}
           className="flex flex-col sm:flex-row gap-3"
         >
           <a href="#projects"
