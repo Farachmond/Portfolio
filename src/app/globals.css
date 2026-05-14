@@ -98,6 +98,12 @@ body {
   * { -webkit-tap-highlight-color: transparent; }
 }
 
+img {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 @keyframes marquee {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }

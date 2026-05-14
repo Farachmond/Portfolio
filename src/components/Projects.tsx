@@ -1,5 +1,5 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 
@@ -57,6 +57,7 @@ export default function Projects() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
+  const [activePhoto, setActivePhoto] = useState<string | null>(null);
 
   return (
     <section id="projects" ref={ref} className="relative py-24 md:py-32 px-6 lg:px-12 overflow-hidden" style={{ background: "var(--bg)" }}>
@@ -79,16 +80,23 @@ export default function Projects() {
             <h3 className="text-white font-black uppercase text-center mb-8" style={{ fontSize: "clamp(2rem, 8vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
             <div className="grid grid-cols-2 gap-2">
               {photos.map((photo, i) => (
-                <div key={i} className="aspect-square overflow-hidden rounded-sm">
+                <button
+                  key={i}
+                  className="aspect-square overflow-hidden rounded-sm block"
+                  onClick={() => setActivePhoto(photo.src)}
+                  onContextMenu={(e) => e.preventDefault()}
+                  style={{ WebkitTouchCallout: "none" } as React.CSSProperties}
+                >
                   <Image
                     src={photo.src}
                     alt={photo.alt}
                     width={400}
                     height={400}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover pointer-events-none"
                     loading={i < 4 ? "eager" : "lazy"}
+                    draggable={false}
                   />
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -148,9 +156,15 @@ export default function Projects() {
             <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
             <Marquee3D speed={25}>
               {[...photos, ...photos].map((photo, i) => (
-                <div key={i} className="flex-shrink-0 w-72 aspect-square overflow-hidden rounded-sm">
-                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" />
-                </div>
+                <button
+                  key={i}
+                  className="flex-shrink-0 w-72 aspect-square overflow-hidden rounded-sm block"
+                  onClick={() => setActivePhoto(photo.src)}
+                  onContextMenu={(e) => e.preventDefault()}
+                  style={{ WebkitTouchCallout: "none" } as React.CSSProperties}
+                >
+                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover pointer-events-none" draggable={false} />
+                </button>
               ))}
             </Marquee3D>
           </motion.div>
@@ -193,6 +207,13 @@ export default function Projects() {
       <AnimatePresence>
         {activeVideo && (
           <VideoModal src={activeVideo} onClose={() => setActiveVideo(null)} />
+        )}
+      </AnimatePresence>
+
+      {/* Photo lightbox */}
+      <AnimatePresence>
+        {activePhoto && (
+          <PhotoModal src={activePhoto} onClose={() => setActivePhoto(null)} />
         )}
       </AnimatePresence>
     </section>
@@ -278,6 +299,66 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
               }
             </button>
           </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function PhotoModal({ src, onClose }: { src: string; onClose: () => void }) {
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [onClose]);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.2 }}
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10"
+      style={{ background: "rgba(0,0,0,0.96)" }}
+      onClick={onClose}
+      onContextMenu={(e) => e.preventDefault()}
+    >
+      <motion.div
+        initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
+        transition={{ duration: 0.2 }}
+        className="relative max-w-4xl w-full flex flex-col items-center"
+        onClick={(e) => e.stopPropagation()}
+        onContextMenu={(e) => e.preventDefault()}
+      >
+        <button
+          onClick={onClose}
+          className="self-end mb-3 flex items-center gap-2 text-xs tracking-widest uppercase"
+          style={{ color: "rgba(255,255,255,0.5)" }}
+        >
+          Sluiten
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+        <div
+          className="relative w-full overflow-hidden rounded-sm"
+          style={{ maxHeight: "85vh", userSelect: "none", WebkitUserSelect: "none" } as React.CSSProperties}
+          onContextMenu={(e) => e.preventDefault()}
+        >
+          <img
+            src={src}
+            alt=""
+            draggable={false}
+            onContextMenu={(e) => e.preventDefault()}
+            style={{
+              width: "100%",
+              height: "100%",
+              maxHeight: "85vh",
+              objectFit: "contain",
+              display: "block",
+              userSelect: "none",
+              WebkitUserSelect: "none",
+              pointerEvents: "none",
+            } as React.CSSProperties}
+          />
         </div>
       </motion.div>
     </motion.div>
