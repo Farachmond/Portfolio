@@ -35,23 +35,14 @@ export default function Hero() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: reduceMotion ? 0.5 : 2.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        {/* Static image on mobile, video on desktop */}
-        <Image
-          src="/hero-bg.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="md:hidden"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
         <video
           autoPlay
           loop
           muted
           playsInline
-          className="hidden md:block absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         >
+          <source src="/hero-bg-mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
           <source src="/hero-bg.mp4" type="video/mp4" />
         </video>
       </motion.div>
