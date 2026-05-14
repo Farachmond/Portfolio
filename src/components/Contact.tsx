@@ -8,30 +8,22 @@ export default function Contact() {
   const [email, setEmail] = useState("");
   const [form, setForm] = useState({ name: "", email: "", project: "", message: "" });
   const [sent, setSent] = useState(false);
-  const [sending, setSending] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setSending(true);
-    try {
-      const res = await fetch("https://formspree.io/f/xbljevqz", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ name: form.name, email: form.email, project: form.project, message: form.message }),
-      });
-      if (res.ok) setSent(true);
-    } finally {
-      setSending(false);
-    }
+    const subject = encodeURIComponent(`Samenwerking: ${form.project || "Nieuw project"}`);
+    const body = encodeURIComponent(
+      `Naam: ${form.name}\nE-mail: ${form.email}\nProject: ${form.project}\n\n${form.message}`
+    );
+    window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
+    setSent(true);
   };
 
-  const handleQuickConnect = async () => {
+  const handleQuickConnect = () => {
     if (!email) return;
-    await fetch("https://formspree.io/f/xbljevqz", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ email, message: "Quick connect via email bar" }),
-    });
+    const subject = encodeURIComponent("Contact via FCProduction");
+    const body = encodeURIComponent(`E-mail: ${email}`);
+    window.location.href = `mailto:farachmond@gmail.com?subject=${subject}&body=${body}`;
     setEmail("");
   };
 
@@ -128,18 +120,15 @@ export default function Contact() {
               onBlur={(e) => { e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"; }}
             />
             <button type="submit"
-              disabled={sending}
               className="w-full flex items-center justify-center gap-3 px-8 py-4 text-xs font-bold tracking-widest uppercase transition-all duration-300 border"
-              style={{ background: sending ? "transparent" : "#fff", color: sending ? "#fff" : "#000", borderColor: "#fff", opacity: sending ? 0.6 : 1 }}
-              onMouseEnter={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; } }}
-              onMouseLeave={(e) => { if (!sending) { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; } }}
+              style={{ background: "#fff", color: "#000", borderColor: "#fff" }}
+              onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "transparent"; el.style.color = "#fff"; }}
+              onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "#fff"; el.style.color = "#000"; }}
             >
-              {sending ? "Versturen..." : "Verstuur Bericht"}
-              {!sending && (
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              )}
+              Verstuur Bericht
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
             </button>
           </motion.form>
         )}
