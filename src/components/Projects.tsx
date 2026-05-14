@@ -27,7 +27,14 @@ const projects = [
     video: "/intro-symposium.mov", poster: "/poster-intro-symposium.jpg", posterFit: "cover" as const,
   },
   {
-    id: 4, title: "The Breakfast Club Trailer", category: "Film", year: "2026",
+    id: 4, title: "Andy Schleck Edit", category: "Video Edit", year: "2024",
+    description: "Video edit gemaakt voor Andy Schleck — montage door Farachmond Curiel.",
+    tags: ["Video Edit", "Sport"], duration: "",
+    gradient: "from-neutral-900 via-stone-800 to-zinc-900",
+    video: "/andy-schleck.mp4", poster: "/poster-andy-schleck.jpg", posterFit: "cover" as const,
+  },
+  {
+    id: 5, title: "The Breakfast Club Trailer", category: "Film", year: "2026",
     description: "Zelfgemaakte trailer van The Breakfast Club — een creatieve hervertelling van een iconische film.",
     tags: ["Trailer", "Film"], duration: "",
     gradient: "from-zinc-900 via-stone-800 to-neutral-900",
