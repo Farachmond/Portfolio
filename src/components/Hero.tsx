@@ -52,11 +52,9 @@ export default function Hero() {
           loop
           muted
           playsInline
+          src="/hero-bg-mobile.mp4"
           className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src="/hero-bg-mobile.mp4" media="(max-width: 768px)" type="video/mp4" />
-          <source src="/hero-bg.mp4" type="video/mp4" />
-        </video>
+        />
       </motion.div>
 
       {/* Atmospheric bokeh orbs — desktop only (CSS hides on mobile) */}
