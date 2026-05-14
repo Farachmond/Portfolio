@@ -36,7 +36,14 @@ const projects = [
 ];
 
 const photos: { src: string; alt: string }[] = [
-  // Voeg hier je foto's toe, bijv: { src: "/foto1.jpg", alt: "Beschrijving" }
+  { src: "/photos/398a9840.jpg", alt: "Foto" },
+  { src: "/photos/398a9850.jpg", alt: "Foto" },
+  { src: "/photos/398a9854.jpg", alt: "Foto" },
+  { src: "/photos/398a9865.jpg", alt: "Foto" },
+  { src: "/photos/facu-2025-09-17-055.jpg", alt: "Foto" },
+  { src: "/photos/facu-2025-09-17-066.jpg", alt: "Foto" },
+  { src: "/photos/img_0557.jpg", alt: "Foto" },
+  { src: "/photos/img_0633.jpg", alt: "Foto" },
 ];
 
 export default function Projects() {
