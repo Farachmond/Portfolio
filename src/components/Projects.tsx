@@ -10,7 +10,7 @@ const projects = [
     tags: ["Aftermovie", "Event Film"], duration: "",
     gradient: "from-zinc-900 via-neutral-800 to-stone-900",
     video: "/feel-good-aftermovie.mp4",
-    poster: "/poster-feel-good.jpg", posterFit: "cover" as const,
+    poster: "/feel-good-poster.png", posterFit: "cover" as const,
   },
   {
     id: 2, title: "Showreel", category: "Showreel", year: "2026",
