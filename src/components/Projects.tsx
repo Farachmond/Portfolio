@@ -155,13 +155,11 @@ function Marquee3D({ children, speed = 30, reverse = false, isMobile = false }: 
   return (
     <div style={{
       overflow: "hidden",
-      ...(isMobile ? {} : {
-        perspective: "800px",
-        maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-        WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
-      }),
+      perspective: "800px",
+      maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
+      WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
     }}>
-      <div style={isMobile ? {} : { transform: "rotateX(8deg)", transformOrigin: "center center" }}>
+      <div style={{ transform: "rotateX(8deg)", transformOrigin: "center center" }}>
         <div
           className="flex gap-3 w-max py-3"
           style={{
