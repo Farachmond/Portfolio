@@ -112,7 +112,7 @@ export default function Projects() {
           <p className="section-label mb-3 md:mb-6 text-center">Video</p>
           <h3 className="text-white font-black uppercase text-center mb-8 md:mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Films</h3>
         </div>
-        <Marquee3D speed={isMobile ? 30 : 40} reverse isMobile={isMobile}>
+        <Marquee3D speed={isMobile ? 30 : 40} reverse isMobile={isMobile} no3dOnMobile>
           {[...projects, ...projects].map((project, i) => (
             <div
               key={i}
@@ -149,17 +149,18 @@ export default function Projects() {
   );
 }
 
-function Marquee3D({ children, speed = 30, reverse = false, isMobile = false }: {
-  children: React.ReactNode; speed?: number; reverse?: boolean; isMobile?: boolean;
+function Marquee3D({ children, speed = 30, reverse = false, isMobile = false, no3dOnMobile = false }: {
+  children: React.ReactNode; speed?: number; reverse?: boolean; isMobile?: boolean; no3dOnMobile?: boolean;
 }) {
+  const flat = isMobile && no3dOnMobile;
   return (
     <div style={{
       overflow: "hidden",
-      perspective: "800px",
+      perspective: flat ? undefined : "800px",
       maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
       WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)",
     }}>
-      <div style={{ transform: "rotateX(8deg)", transformOrigin: "center center" }}>
+      <div style={flat ? {} : { transform: "rotateX(8deg)", transformOrigin: "center center" }}>
         <div
           className="flex gap-3 w-max py-3"
           style={{
