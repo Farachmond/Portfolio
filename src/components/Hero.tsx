@@ -35,14 +35,16 @@ export default function Hero() {
         animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: reduceMotion ? 0.5 : 2.5, ease: [0.22, 1, 0.36, 1] }}
       >
-        <Image
-          src="/hero-bg.jpg"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          style={{ objectFit: "cover", objectPosition: "center" }}
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source src="/hero-bg.mp4" type="video/mp4" />
+          <Image src="/hero-bg.jpg" alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+        </video>
       </motion.div>
 
       {/* Atmospheric bokeh orbs */}
