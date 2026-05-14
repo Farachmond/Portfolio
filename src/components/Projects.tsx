@@ -80,23 +80,24 @@ export default function Projects() {
             <h3 className="text-white font-black uppercase text-center mb-8" style={{ fontSize: "clamp(2rem, 8vw, 4rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
             <div className="grid grid-cols-2 gap-2">
               {photos.map((photo, i) => (
-                <button
-                  key={i}
-                  className="aspect-square overflow-hidden rounded-sm block"
-                  onClick={() => setActivePhoto(photo.src)}
-                  onContextMenu={(e) => e.preventDefault()}
-                  style={{ WebkitTouchCallout: "none" } as React.CSSProperties}
-                >
+                <div key={i} className="aspect-square overflow-hidden rounded-sm relative">
                   <Image
                     src={photo.src}
                     alt={photo.alt}
                     width={400}
                     height={400}
-                    className="w-full h-full object-cover pointer-events-none"
+                    className="w-full h-full object-cover"
                     loading={i < 4 ? "eager" : "lazy"}
                     draggable={false}
                   />
-                </button>
+                  {/* Transparent overlay blocks iOS long-press save */}
+                  <div
+                    className="absolute inset-0 z-10 cursor-pointer"
+                    onClick={() => setActivePhoto(photo.src)}
+                    onContextMenu={(e) => e.preventDefault()}
+                    style={{ WebkitTouchCallout: "none", userSelect: "none" } as React.CSSProperties}
+                  />
+                </div>
               ))}
             </div>
           </div>
@@ -156,15 +157,15 @@ export default function Projects() {
             <h3 className="text-white font-black uppercase text-center mb-12" style={{ fontSize: "clamp(2rem, 6vw, 5rem)", lineHeight: 0.9, letterSpacing: "-0.02em" }}>Foto's</h3>
             <Marquee3D speed={25}>
               {[...photos, ...photos].map((photo, i) => (
-                <button
-                  key={i}
-                  className="flex-shrink-0 w-72 aspect-square overflow-hidden rounded-sm block"
-                  onClick={() => setActivePhoto(photo.src)}
-                  onContextMenu={(e) => e.preventDefault()}
-                  style={{ WebkitTouchCallout: "none" } as React.CSSProperties}
-                >
-                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover pointer-events-none" draggable={false} />
-                </button>
+                <div key={i} className="flex-shrink-0 w-72 aspect-square overflow-hidden rounded-sm relative">
+                  <Image src={photo.src} alt={photo.alt} width={400} height={400} className="w-full h-full object-cover" draggable={false} />
+                  <div
+                    className="absolute inset-0 z-10 cursor-pointer"
+                    onClick={() => setActivePhoto(photo.src)}
+                    onContextMenu={(e) => e.preventDefault()}
+                    style={{ WebkitTouchCallout: "none", userSelect: "none" } as React.CSSProperties}
+                  />
+                </div>
               ))}
             </Marquee3D>
           </motion.div>
@@ -327,6 +328,7 @@ function PhotoModal({ src, onClose }: { src: string; onClose: () => void }) {
         className="relative max-w-4xl w-full flex flex-col items-center"
         onClick={(e) => e.stopPropagation()}
         onContextMenu={(e) => e.preventDefault()}
+        style={{ WebkitTouchCallout: "none" } as React.CSSProperties}
       >
         <button
           onClick={onClose}
