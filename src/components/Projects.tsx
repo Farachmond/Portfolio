@@ -114,37 +114,45 @@ export default function Projects() {
 }
 
 function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(true);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [muted, setMuted] = useState(false);
+
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+      if (e.key === " ") { e.preventDefault(); togglePlay(); }
+    };
     document.addEventListener("keydown", onKey);
     document.body.style.overflow = "hidden";
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
   }, [onClose]);
+
+  const togglePlay = () => {
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) { v.play(); setPlaying(true); } else { v.pause(); setPlaying(false); }
+  };
+
+  const fmt = (s: number) => `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, "0")}`;
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.3 }}
       className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-10"
       style={{ background: "rgba(0,0,0,0.92)", backdropFilter: "blur(12px)" }}
       onClick={onClose}
     >
       <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.95, opacity: 0 }}
+        initial={{ scale: 0.95, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className="relative w-full max-w-5xl"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
+        {/* Close */}
+        <button onClick={onClose}
           className="absolute -top-10 right-0 flex items-center gap-2 text-xs tracking-widest uppercase transition-colors duration-200"
           style={{ color: "rgba(255,255,255,0.4)" }}
           onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
@@ -156,19 +164,48 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
           </svg>
         </button>
 
-        {/* Video player */}
-        <video
-          src={src}
-          controls
-          autoPlay
-          playsInline
-          controlsList="nodownload noplaybackrate"
-          disablePictureInPicture
-          onContextMenu={(e) => e.preventDefault()}
-          className="w-full rounded-sm"
-          style={{ maxHeight: "80vh", background: "#000" }}
-        >
-        </video>
+        {/* Video */}
+        <div className="relative bg-black rounded-sm overflow-hidden" style={{ maxHeight: "80vh" }}>
+          <video
+            ref={videoRef} src={src} autoPlay playsInline
+            onContextMenu={(e) => e.preventDefault()}
+            onTimeUpdate={() => { const v = videoRef.current; if (v) setProgress(v.currentTime / v.duration * 100); }}
+            onLoadedMetadata={() => { if (videoRef.current) setDuration(videoRef.current.duration); }}
+            onEnded={() => setPlaying(false)}
+            className="w-full"
+            style={{ maxHeight: "calc(80vh - 56px)", display: "block" }}
+          />
+
+          {/* Custom controls */}
+          <div className="flex items-center gap-3 px-4 py-3" style={{ background: "rgba(0,0,0,0.85)" }}>
+            {/* Play/pause */}
+            <button onClick={togglePlay} className="text-white flex-shrink-0">
+              {playing
+                ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+                : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+              }
+            </button>
+
+            {/* Time */}
+            <span className="text-xs font-mono flex-shrink-0" style={{ color: "rgba(255,255,255,0.5)" }}>
+              {fmt(duration * progress / 100)} / {fmt(duration)}
+            </span>
+
+            {/* Progress bar */}
+            <input type="range" min={0} max={100} value={progress}
+              onChange={(e) => { const v = videoRef.current; if (v) { v.currentTime = v.duration * Number(e.target.value) / 100; setProgress(Number(e.target.value)); } }}
+              className="flex-1 h-1 cursor-pointer accent-white"
+            />
+
+            {/* Mute */}
+            <button onClick={() => { const v = videoRef.current; if (v) { v.muted = !v.muted; setMuted(!muted); } }} className="text-white flex-shrink-0">
+              {muted
+                ? <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M16.5 12A4.5 4.5 0 0 0 14 7.97v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51A8.796 8.796 0 0 0 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06A8.99 8.99 0 0 0 17.73 18l2 2L21 18.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/></svg>
+                : <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 7.97v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+              }
+            </button>
+          </div>
+        </div>
       </motion.div>
     </motion.div>
   );
