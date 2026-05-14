@@ -38,8 +38,8 @@ const projects = [
 export default function Projects() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
-  const featured = projects.slice(0, 3);
-  const rest = projects.slice(3);
+  const featured = projects.slice(0, 4);
+  const rest = projects.slice(4);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
 
   return (
