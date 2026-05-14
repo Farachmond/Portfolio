@@ -162,6 +162,9 @@ function VideoModal({ src, onClose }: { src: string; onClose: () => void }) {
           controls
           autoPlay
           playsInline
+          controlsList="nodownload noplaybackrate"
+          disablePictureInPicture
+          onContextMenu={(e) => e.preventDefault()}
           className="w-full rounded-sm"
           style={{ maxHeight: "80vh", background: "#000" }}
         >
