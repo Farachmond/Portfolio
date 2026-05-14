@@ -10,7 +10,7 @@ const projects = [
     tags: ["Aftermovie", "Event Film"], duration: "",
     gradient: "from-zinc-900 via-neutral-800 to-stone-900",
     video: "/feel-good-aftermovie.mp4",
-    poster: "/feel-good-poster.png", posterFit: "cover" as const,
+    poster: "/poster-feel-good.jpg", posterFit: "cover" as const,
   },
   {
     id: 2, title: "Showreel", category: "Showreel", year: "2026",
@@ -24,14 +24,14 @@ const projects = [
     description: "Intro video gemaakt voor het ROC Mondriaan Symposium — een krachtige opening voor een inspirerende dag.",
     tags: ["Motion Graphics", "Event"], duration: "",
     gradient: "from-stone-900 via-zinc-800 to-neutral-900",
-    video: "/intro-symposium.mov", poster: "/roc-mondriaan-poster.jpg", posterFit: "contain" as const,
+    video: "/intro-symposium.mov", poster: "/poster-intro-symposium.jpg", posterFit: "cover" as const,
   },
   {
     id: 4, title: "The Breakfast Club Trailer", category: "Film", year: "2026",
     description: "Zelfgemaakte trailer van The Breakfast Club — een creatieve hervertelling van een iconische film.",
     tags: ["Trailer", "Film"], duration: "",
     gradient: "from-zinc-900 via-stone-800 to-neutral-900",
-    video: "/breakfast-club-trailer.mp4", poster: undefined, posterFit: "cover" as const,
+    video: "/breakfast-club-trailer.mp4", poster: "/poster-breakfast-club.jpg", posterFit: "cover" as const,
   },
 ];
 
