@@ -58,15 +58,15 @@ export default function Hero() {
       </motion.div>
 
       {/* Atmospheric bokeh orbs — desktop only (CSS hides on mobile) */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+      <div className="absolute inset-0 pointer-events-none overflow-hidden" aria-hidden="true">
         <div className="bokeh-a absolute top-1/4 left-1/3 w-96 h-96 rounded-full blur-[100px]" style={{ background: "rgba(255,255,255,0.06)" }} />
         <div className="bokeh-b absolute bottom-1/3 right-1/4 w-80 h-80 rounded-full blur-[120px]" style={{ background: "rgba(200,200,220,0.05)" }} />
         <div className="bokeh-c absolute top-1/2 left-1/2 w-64 h-64 rounded-full blur-[80px]" style={{ background: "rgba(255,255,255,0.04)" }} />
       </div>
 
       {/* Dark overlays */}
-      <div className="absolute inset-0" style={{ background: "rgba(8,8,8,0.72)" }} />
-      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#080808]" />
+      <div className="absolute inset-0" style={{ background: "rgba(8,8,8,0.72)" }} aria-hidden="true" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-[#080808]" aria-hidden="true" />
 
       {/* Left: scroll label */}
       <motion.div
@@ -164,7 +164,7 @@ export default function Hero() {
       </div>
 
       {/* Bottom center scroll indicator */}
-      <motion.div
+      <motion.div aria-hidden="true"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 2.2 }}

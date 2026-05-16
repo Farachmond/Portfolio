@@ -16,10 +16,10 @@ export default function About() {
 
       {/* Bokeh */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[150px] pointer-events-none bokeh-b"
-        style={{ background: "rgba(255,255,255,0.03)" }} />
+        style={{ background: "rgba(255,255,255,0.03)" }} aria-hidden="true" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full blur-[120px] pointer-events-none bokeh-c"
-        style={{ background: "rgba(255,255,255,0.02)" }} />
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+        style={{ background: "rgba(255,255,255,0.02)" }} aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgba(255,255,255,0.06)" }} aria-hidden="true" />
 
       <div className="max-w-7xl mx-auto">
 

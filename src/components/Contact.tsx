@@ -52,8 +52,8 @@ export default function Contact() {
 
       {/* Bokeh */}
       <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] rounded-full blur-[150px] pointer-events-none bokeh-a"
-        style={{ background: "rgba(255,255,255,0.03)" }} />
-      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgba(255,255,255,0.06)" }} />
+        style={{ background: "rgba(255,255,255,0.03)" }} aria-hidden="true" />
+      <div className="absolute inset-x-0 top-0 h-px" style={{ background: "rgba(255,255,255,0.06)" }} aria-hidden="true" />
 
       <div className="max-w-3xl mx-auto text-center">
 
