@@ -88,6 +88,7 @@ export default function Hero() {
       >
         {socials.map((s) => (
           <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+            aria-label={s.label}
             className="transition-all duration-300"
             style={{ color: "rgba(255,255,255,0.35)" }}
             onMouseEnter={(e) => (e.currentTarget.style.color = "#fff")}
