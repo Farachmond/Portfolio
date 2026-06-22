@@ -63,31 +63,6 @@ export default function ContactLinksPage() {
           ))}
         </nav>
 
-        <section className={styles.contactSection} aria-labelledby="save-contact-title">
-          <div className={styles.sectionHeading}>
-            <span aria-hidden="true" />
-            <h1 id="save-contact-title">Save my contact</h1>
-            <span aria-hidden="true" />
-          </div>
-
-          <a className={styles.contactButton} href="/contact/contact.vcf" download="contact.vcf">
-            <ContactIcon />
-            Add to contacts
-          </a>
-
-          <figure className={styles.qrBlock}>
-            <div className={styles.qrFrame}>
-              <Image
-                src="/contact/qr-contact.svg"
-                alt="QR-code naar fcproduction.nl/contact"
-                width={216}
-                height={216}
-              />
-            </div>
-            <figcaption><ScanIcon /> Scan to connect</figcaption>
-          </figure>
-        </section>
-
         <footer>© FCPRODUCTION 2026 — DEN HAAG</footer>
       </div>
     </main>
@@ -96,20 +71,6 @@ export default function ContactLinksPage() {
 
 function ArrowIcon() {
   return <svg viewBox="0 0 24 24"><path d="m9 5 7 7-7 7" /></svg>;
-}
-
-function ContactIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <rect x="4" y="3" width="16" height="18" rx="2" />
-      <circle cx="10" cy="9" r="2.2" />
-      <path d="M6.8 16c.5-2 1.5-3 3.2-3s2.7 1 3.2 3M16 8h1.5M16 12h1.5M16 16h1.5" />
-    </svg>
-  );
-}
-
-function ScanIcon() {
-  return <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M8 3H4a1 1 0 0 0-1 1v4M16 3h4a1 1 0 0 1 1 1v4M8 21H4a1 1 0 0 1-1-1v-4M16 21h4a1 1 0 0 0 1-1v-4" /></svg>;
 }
 
 function PlatformIcon({ name }: { name: (typeof links)[number]["icon"] }) {

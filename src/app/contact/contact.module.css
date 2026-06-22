@@ -1,6 +1,5 @@
 .page {
   --blue: #1670ff;
-  --blue-bright: #2b7cff;
   --line: #d8d8d8;
   position: relative;
   min-width: 320px;
@@ -71,8 +70,7 @@
 
 .linkButton:hover { border-color: var(--blue); color: #fff; background: var(--blue); transform: translateY(-2px); }
 .linkButton:active { transform: scale(0.985); }
-.linkButton:focus-visible,
-.contactButton:focus-visible { outline: 3px solid #080808; outline-offset: 3px; }
+.linkButton:focus-visible { outline: 3px solid #080808; outline-offset: 3px; }
 
 .linkIcon,
 .linkArrow { display: grid; place-items: center; }
@@ -83,38 +81,6 @@
 .linkArrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 2; }
 .linkButton:hover .linkArrow { color: #fff; transform: translateX(2px); }
 
-.contactSection { margin-top: 50px; }
-.sectionHeading { display: grid; grid-template-columns: 24px 1fr 24px; align-items: start; gap: 12px; margin-bottom: 25px; }
-.sectionHeading span { width: 22px; height: 22px; border-color: var(--blue); border-style: solid; }
-.sectionHeading span:first-child { border-width: 2px 0 0 2px; }
-.sectionHeading span:last-child { border-width: 2px 2px 0 0; }
-.sectionHeading h1 { margin: 0; text-align: center; font-size: 1.48rem; font-weight: 730; letter-spacing: -0.035em; line-height: 1.1; }
-
-.contactButton {
-  display: flex;
-  min-height: 74px;
-  align-items: center;
-  justify-content: center;
-  gap: 13px;
-  border: 2px solid var(--blue);
-  border-radius: 20px;
-  color: var(--blue-bright);
-  background: rgba(255, 255, 255, 0.88);
-  font-size: 1.06rem;
-  font-weight: 700;
-  text-decoration: none;
-  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
-}
-
-.contactButton svg { width: 27px; height: 27px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
-.contactButton:hover { background: var(--blue); color: #fff; transform: translateY(-2px); }
-
-.qrBlock { display: flex; flex-direction: column; align-items: center; margin: 30px 0 0; }
-.qrFrame { display: grid; width: 174px; height: 174px; place-items: center; overflow: hidden; border: 2px solid var(--blue); border-radius: 18px; background: #fff; }
-.qrFrame img { display: block; width: 146px; height: 146px; }
-.qrBlock figcaption { display: flex; align-items: center; gap: 10px; margin-top: 15px; color: #353535; font-size: 0.93rem; }
-.qrBlock figcaption svg { width: 22px; height: 22px; fill: none; stroke: var(--blue); stroke-linecap: square; stroke-width: 1.8; }
-
 .shell footer { margin-top: 31px; padding-top: 23px; border-top: 1px solid rgba(255, 255, 255, 0.5); color: #444; font-size: 0.72rem; letter-spacing: 0.055em; text-align: center; }
 
 @media (min-width: 560px) {
@@ -124,5 +90,5 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .linkButton, .contactButton { transition-duration: 0.01ms; }
+  .linkButton { transition-duration: 0.01ms; }
 }
